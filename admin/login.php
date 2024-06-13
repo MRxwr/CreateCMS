@@ -3,58 +3,18 @@ if ( isset($_POST["username"]) && !empty($_POST["username"] )){
 	$check = [';','"',"'"];
 	$_POST = str_replace($check,"",$_POST);
 	require_once('includes/config.php');
-	$sql = "SELECT *
-			FROM `user`
-			WHERE
-			`username` LIKE '".$_POST['username']."'
-			AND
-			`password` LIKE '".sha1($_POST['password'])."'
-			AND
-			`status` LIKE '0'
-			";
-	$result = $dbconnect->query($sql);
-	if ($result->num_rows > 0 ){
+	if( $user = selectDBNew("user",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0''","") ){
 		setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
-		$sql = "UPDATE `user`
-				SET
-				`hash` = '".md5(time().$_POST['username'])."'
-				WHERE
-				`username` LIKE '".$_POST['username']."'
-				AND
-				`password` LIKE '".sha1($_POST['password'])."'
-				";
-		$result = $dbconnect->query($sql);
+		updateDB("user",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
 		$error = 0;
 		header('LOCATION: index.php');die();
+	}elseif( $user = selectDBNew("employee",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0''","") ){
+		setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
+		updateDB("employee",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
+		$error = 0;
+		header('LOCATION: index.php?page=details&action=employees&id='.$userId);die();
 	}else{
-		$sql = "SELECT *
-				FROM `employee`
-				WHERE
-				`username` LIKE '".$_POST['username']."'
-				AND
-				`password` LIKE '".sha1($_POST['password'])."'
-				AND
-				`status` LIKE '0'
-				";
-		$result = $dbconnect->query($sql);
-		if ($result->num_rows > 0 ){
-			$row = $result->fetch_assoc();
-			$userId = $row["id"];
-			setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
-			$sql = "UPDATE `employee`
-					SET
-					`hash` = '".md5(time().$_POST['username'])."'
-					WHERE
-					`username` LIKE '".$_POST['username']."'
-					AND
-					`password` LIKE '".sha1($_POST['password'])."'
-					";
-			$result = $dbconnect->query($sql);
-			$error = 0;
-			header('LOCATION: index.php?page=details&action=employees&id='.$userId);die();
-		}else{
-			$error = 1;
-		}
+		$error = 1;
 	}
 }
 ?>
