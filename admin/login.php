@@ -2,12 +2,12 @@
 require_once('includes/config.php');
 require_once('includes/functions.php');
 if ( isset($_POST["username"]) && !empty($_POST["username"] )){
-	if( $user = selectDBNew("user",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0''","") ){
+	if( $user = selectDBNew("user",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0'","") ){
 		setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
 		updateDB("user",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
 		$error = 0;
 		header('LOCATION: index.php');die();
-	}elseif( $user = selectDBNew("employee",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0''","") ){
+	}elseif( $user = selectDBNew("employee",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0'","") ){
 		setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
 		updateDB("employee",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
 		$error = 0;
