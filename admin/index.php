@@ -1,7 +1,7 @@
 <?php 
 // calling database
 require_once('includes/config.php');
-
+die("dead");
 // checking login
 require_once('includes/checkLogin.php');
 
@@ -10,7 +10,7 @@ require_once('includes/functions.php');
 
 // header
 require_once('templates/header.php');
-die();
+
 // navbar
 require_once('templates/topMenu.php');
 
