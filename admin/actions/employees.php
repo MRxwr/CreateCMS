@@ -76,9 +76,9 @@ if ($userType == 1 ){
 			JOIN `project` as p
 			ON p.id = t.projectId
 			WHERE
-			t.status LIKE '".$status[$i]."'
+			t.status LIKE '{$status[$i]}'
 			AND
-			t.to LIKE '".$userId."'
+			t.to LIKE '{$userId}'
 			";
 }else{
 	$sql = "SELECT t.*, u.username, e.name, p.title, p.id as pid
@@ -90,7 +90,7 @@ if ($userType == 1 ){
 			JOIN `project` as p
 			ON p.id = t.projectId
 			WHERE
-			t.status LIKE '".$status[$i]."'
+			t.status LIKE '{$status[$i]}'
 			";
 }
 $result = $dbconnect->query($sql);
