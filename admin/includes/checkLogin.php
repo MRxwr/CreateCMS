@@ -15,6 +15,20 @@ if ( !$_COOKIE["cmsCreate"] || ( isset( $_GET["page"] ) && $_GET["page"] == "log
 		date_default_timezone_set('Asia/Kuwait');
 		$date = date('Y-m-d H:i:s');
 		$userType = 1;
+	}elseif ( isset($_POST["username"]) && !empty($_POST["username"] )){
+		if( $user = selectDBNew("user",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0'","") ){
+			setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
+			updateDB("user",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
+			$error = 0;
+			header('LOCATION: index.php');die();
+		}elseif( $user = selectDBNew("employee",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0'","") ){
+			setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
+			updateDB("employee",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
+			$error = 0;
+			header('LOCATION: index.php?page=details&action=employees&id='.$userId);die();
+		}else{
+			header('LOCATION: login.php?error=1');die();
+		}
 	}else{
 		setcookie("cmsCreate", "", time() - 3600, '/');
 		header('LOCATION: login.php');
