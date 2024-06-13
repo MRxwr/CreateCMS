@@ -1,6 +1,6 @@
 <?php
 if ( $userType == 1 ){
-	$url = "index.php?page=details&action=employees&id=".$userId;
+	$url = "index.php?page=details&action=employees&id={$userId}";
 }else{
 	$url = "index.php";
 }
@@ -12,7 +12,7 @@ if ( $userType == 1 ){
 			<div class="logo-wrap">
 				<a href="<?php echo $url ?>">
 					<img class="brand-img" src="../img/logo.png" alt="brand"/>
-					<span class="brand-text">Create Co CMS</span>
+					<span class="brand-text">Create CMS</span>
 				</a>
 			</div>
 		</div>	
