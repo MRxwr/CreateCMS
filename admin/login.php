@@ -1,6 +1,7 @@
 <?php
 require_once('includes/config.php');
 require_once('includes/functions.php');
+require_once('includes/checkLogin.php');
 if ( isset($_POST["username"]) && !empty($_POST["username"] )){
 	if( $user = selectDBNew("user",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0'","") ){
 		setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
