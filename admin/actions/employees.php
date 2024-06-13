@@ -67,7 +67,7 @@ for($i = 0; $i < 3 ; $i++ ){
 <tbody>
 <?php
 if ($userType == 1 ){
-	$sql = "SELECT t.*, u.username, e.name, p.title, p.id as pid
+	echo $sql = "SELECT t.*, u.username, e.name, p.title, p.id as pid
 			FROM `task` as t
 			JOIN `user` as u
 			ON u.id = t.by
