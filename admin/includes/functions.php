@@ -71,7 +71,7 @@ function selectDBNew($table, $placeHolders, $where, $order){
     if(!empty($order)) {
         $sql .= " ORDER BY {$order}";
     }
-    if( $table == "employees" && strstr($where,"email") ){
+    if( $table == "employee" && strstr($where,"email") ){
         $array = array(
             "userId" => 0,
             "username" => 0,
