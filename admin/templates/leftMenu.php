@@ -3,11 +3,11 @@
 <div class="fixed-sidebar-left">
 	<ul class="nav navbar-nav side-nav nicescroll-bar">
 		<li class="navigation-header">
-			<span>Create Co CMS</span> 
+			<span>Create CMS</span> 
 			<i class="zmdi zmdi-more"></i>
 		</li>
 <?php
-if ( $userType  == 0 ){
+if ( $userType == 0 ){
 ?>
 		<li>
 			<a class="active" href="?page=home" >
