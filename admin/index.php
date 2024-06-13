@@ -4,7 +4,7 @@ require_once('includes/config.php');
 
 // checking login
 require_once('includes/checkLogin.php');
-die("dead");
+die("dead check login");
 // loading functions
 require_once('includes/functions.php');
 
