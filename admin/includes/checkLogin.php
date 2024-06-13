@@ -30,7 +30,7 @@ if ( isset($_COOKIE["cmsCreate"]) && !empty($_COOKIE["cmsCreate"])){
 			setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
 			updateDB("employee",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
 			$error = 0;
-			header('LOCATION: index.php?page=details&action=employees&id='.$userId);die();
+			header("LOCATION: index.php?page=details&action=employees&id={$user[0]["id"]}");die();
 		}else{
 			header('LOCATION: login.php?error=1');die();
 		}
