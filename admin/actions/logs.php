@@ -33,7 +33,7 @@ while ( $row = $result->fetch_assoc() ){
 <tr>
 <td><?php echo $row["date"] ?></td>
 <td><?php echo $row["username"] ?></td>
-<td><?php echo $row["log"] ?></td>
+<td><?php echo $row["sqlQuery"] ?></td>
 </tr>
 <?php
 }
