@@ -2,11 +2,12 @@
 // calling database
 require_once('includes/config.php');
 
+// loading functions
+require_once('includes/functions.php');
+
 // checking login
 require_once('includes/checkLogin.php');
 die("dead check login");
-// loading functions
-require_once('includes/functions.php');
 
 // header
 require_once('templates/header.php');
