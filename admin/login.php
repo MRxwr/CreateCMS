@@ -1,6 +1,19 @@
 <?php
 require_once('includes/config.php');
 require_once('includes/functions.php');
+if( isset($_POST["username"]) && !empty($_POST["username"]) && isset($_POST["password"]) && !empty($_POST["password"]) ){
+	if( $user = selectDBNew("user",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0'","") ){
+		setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
+		updateDB("user",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
+		header('LOCATION: index.php');die();
+	}elseif( $user = selectDBNew("employee",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0'","") ){
+		setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
+		updateDB("employee",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
+		header("LOCATION: index.php?page=details&action=employees&id={$user[0]["id"]}");die();
+	}else{
+		header('LOCATION: login.php?error=1');die();
+	}
+}
 ?> 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,7 +82,7 @@ require_once('includes/functions.php');
 
 										</div>	
 										<div class="form-wrap">
-		<form action="includes/checkLogin.php" method="post">
+		<form action="" method="post">
 			<div class="form-group">
 				<label class="control-label mb-10" >Username</label>
 				<input type="text" class="form-control" name="username" required="">
