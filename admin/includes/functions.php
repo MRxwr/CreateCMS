@@ -1,15 +1,15 @@
 <?php
 //database connections
 function deleteDB($table, $where){
-    GLOBAL $dbconnect, $userID, $empUsername, $_GET;
+    GLOBAL $dbconnect, $userId, $username, $_GET;
     $check = [';', '"'];
     $where = str_replace($check, "", $where);
     $sql = "DELETE FROM `" . $table . "` WHERE " . $where;
     if( isset($_GET["v"]) && !empty($_GET["v"]) ){
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
-            "module" => $_GET["v"],
+            "userId" => $userId,
+            "username" => $username,
+            "module" => $_GET["page"],
             "action" => "Delete",
             "sqlQuery" => json_encode(array("table"=>$table,"where"=>$where)),
         );
@@ -193,7 +193,7 @@ function selectJoinDB($table, $joinData, $where){
 }
 
 function insertDB($table, $data){
-    GLOBAL $dbconnect, $userID, $empUsername, $_GET;
+    GLOBAL $dbconnect, $userId, $username, $_GET;
     $check = [';', '"'];
     //$data = escapeString($data);
     $keys = array_keys($data);
@@ -211,9 +211,9 @@ function insertDB($table, $data){
     $stmt->bind_param($types, ...array_values($data));
     if( isset($_GET["v"]) && !empty($_GET["v"]) ){
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
-            "module" => $_GET["v"],
+            "userId" => $userId,
+            "username" => $username,
+            "module" => $_GET["page"],
             "action" => "Insert",
             "sqlQuery" => json_encode(array("table"=>$table,"data"=>$data)),
         );
@@ -229,7 +229,7 @@ function insertDB($table, $data){
 }
 
 function updateDB($table, $data, $where) {
-    GLOBAL $dbconnect, $userID, $empUsername, $_GET;
+    GLOBAL $dbconnect, $userId, $username, $_GET;
     $check = [';', '"'];
     //$data = escapeString($data);
     $where = str_replace($check, "", $where);
@@ -250,9 +250,9 @@ function updateDB($table, $data, $where) {
     
     if( isset($_GET["v"]) && !empty($_GET["v"]) ){
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
-            "module" => $_GET["v"],
+            "userId" => $userId,
+            "username" => $username,
+            "module" => $_GET["page"],
             "action" => "update",
             "sqlQuery" => json_encode(array("table"=>$table,"data"=>$data,"where"=>$where)),
         );
