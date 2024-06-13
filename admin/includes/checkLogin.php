@@ -1,4 +1,6 @@
 <?php
+require_once('includes/config.php');
+require_once('includes/functions.php');
 if ( isset($_COOKIE["cmsCreate"]) && !empty($_COOKIE["cmsCreate"]) ){
 	if( $user = selectDBNew("user",[$_COOKIE["cmsCreate"]],"`hash` LIKE ? AND `status` = '0'","") ){
 		$userId = $user[0]["id"];
