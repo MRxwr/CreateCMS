@@ -86,7 +86,7 @@ if ($userType == 1 ){
 			JOIN `user` as u
 			ON u.id = t.by
 			JOIN `employee` as e
-			ON e.id = t.by
+			ON e.id = t.to
 			JOIN `project` as p
 			ON p.id = t.projectId
 			WHERE
