@@ -1,10 +1,10 @@
 <?php 
 // calling database
 require_once('includes/config.php');
-die("dead");
+
 // checking login
 require_once('includes/checkLogin.php');
-
+die("dead");
 // loading functions
 require_once('includes/functions.php');
 
