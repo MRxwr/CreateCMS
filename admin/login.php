@@ -2,7 +2,7 @@
 require_once('includes/config.php');
 require_once('includes/functions.php');
 require_once('includes/checkLogin.php');
-?>
+?> 
 <!DOCTYPE html>
 <html lang="en">
 	<head>
