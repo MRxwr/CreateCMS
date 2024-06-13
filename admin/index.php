@@ -10,7 +10,7 @@ require_once('includes/functions.php');
 
 // header
 require_once('templates/header.php');
-
+die();
 // navbar
 require_once('templates/topMenu.php');
 
