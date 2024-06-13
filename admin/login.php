@@ -60,7 +60,7 @@ require_once('includes/checkLogin.php');
 											<h3 class="text-center txt-dark mb-10">Sign in to Droopy</h3>
 											<h6 class="text-center nonecase-font txt-grey">Enter your details below</h6>
 											<?php
-											if (isset($error) and $error = 1){
+											if (isset($_GET["error"]) && $_GET["error"] = 1){
 												?>
 												<h6 class="text-center nonecase-font txt-danger">Please check your info.</h6>
 												<?php
