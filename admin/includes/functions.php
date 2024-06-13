@@ -5,7 +5,7 @@ function deleteDB($table, $where){
     $check = [';', '"'];
     $where = str_replace($check, "", $where);
     $sql = "DELETE FROM `" . $table . "` WHERE " . $where;
-    if( isset($_GET["v"]) && !empty($_GET["v"]) ){
+    if( isset($_GET["page"]) && !empty($_GET["page"]) ){
         $array = array(
             "userId" => $userId,
             "username" => $username,
@@ -30,13 +30,13 @@ function deleteDB($table, $where){
 }
 
 function deleteDBNew($table, $params, $where){
-    GLOBAL $dbconnect, $userID, $empUsername, $_GET;
+    GLOBAL $dbconnect, $userId, $username, $_GET;
     $sql = "DELETE FROM `" . $table . "` WHERE " . $where;
-    if (isset($_GET["v"]) && !empty($_GET["v"])) {
+    if (isset($_GET["page"]) && !empty($_GET["page"])) {
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
-            "module" => $_GET["v"],
+            "userId" => $userId,
+            "username" => $username,
+            "module" => $_GET["page"],
             "action" => "Delete",
             "sqlQuery" => json_encode(array("table" => $table, "where" => $where)),
         );
@@ -209,7 +209,7 @@ function insertDB($table, $data){
     $stmt = $dbconnect->prepare($sql);
     $types = str_repeat('s', count($data));
     $stmt->bind_param($types, ...array_values($data));
-    if( isset($_GET["v"]) && !empty($_GET["v"]) ){
+    if( isset($_GET["page"]) && !empty($_GET["page"]) ){
         $array = array(
             "userId" => $userId,
             "username" => $username,
@@ -248,7 +248,7 @@ function updateDB($table, $data, $where) {
     $values = array_values($data);
     $stmt->bind_param($params, ...$values);
     
-    if( isset($_GET["v"]) && !empty($_GET["v"]) ){
+    if( isset($_GET["page"]) && !empty($_GET["page"]) ){
         $array = array(
             "userId" => $userId,
             "username" => $username,
