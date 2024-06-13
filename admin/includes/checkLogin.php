@@ -14,11 +14,11 @@ if ( isset($_COOKIE["cmsCreate"]) && !empty($_COOKIE["cmsCreate"])){
 		$userType = 1;
 	}else{
 		setcookie("cmsCreate", "", time() - 3600, '/');
-		header('LOCATION: login.php');die();
+		header('LOCATION: login.php?error=3');die();
 	}
 }elseif( isset($_GET["page"]) && $_GET["page"] == "logout" ){
 	setcookie("cmsCreate", "", time() - 3600, '/');
-	header('LOCATION: login.php');die();
+	header('LOCATION: login.php?error=2');die();
 }else{
 	if ( isset($_POST["username"]) && !empty($_POST["username"] )){
 		if( $user = selectDBNew("user",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0'","") ){
@@ -36,7 +36,7 @@ if ( isset($_COOKIE["cmsCreate"]) && !empty($_COOKIE["cmsCreate"])){
 		}
 	}else{
 		setcookie("cmsCreate", "", time() - 3600, '/');
-		header('LOCATION: login.php');
+		header('LOCATION: login.php?error=4');die();
 	}
 }
 ?>
