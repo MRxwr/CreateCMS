@@ -1,8 +1,5 @@
 <?php
-if ( !$_COOKIE["cmsCreate"] || ( isset( $_GET["page"] ) && $_GET["page"] == "logout" ) ){
-	setcookie("cmsCreate", "", time() - 3600, '/');
-	header('LOCATION: login.php');
-}else{
+if ( isset($_COOKIE["cmsCreate"]) && !empty($_COOKIE["cmsCreate"])){
 	if( $user = selectDBNew("user",[$_COOKIE["cmsCreate"]],"`hash` LIKE ? AND `status` = '0'","") ){
 		$userId = $user[0]["id"];
 		$username = $user[0]["username"];
@@ -15,7 +12,15 @@ if ( !$_COOKIE["cmsCreate"] || ( isset( $_GET["page"] ) && $_GET["page"] == "log
 		date_default_timezone_set('Asia/Kuwait');
 		$date = date('Y-m-d H:i:s');
 		$userType = 1;
-	}elseif ( isset($_POST["username"]) && !empty($_POST["username"] )){
+	}else{
+		setcookie("cmsCreate", "", time() - 3600, '/');
+		header('LOCATION: login.php');die();
+	}
+}elseif( isset($_GET["page"]) && $_GET["page"] == "logout" ){
+	setcookie("cmsCreate", "", time() - 3600, '/');
+	header('LOCATION: login.php');die();
+}else{
+	if ( isset($_POST["username"]) && !empty($_POST["username"] )){
 		if( $user = selectDBNew("user",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0'","") ){
 			setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
 			updateDB("user",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
