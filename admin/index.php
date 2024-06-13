@@ -7,7 +7,6 @@ require_once('includes/functions.php');
 
 // checking login
 require_once('includes/checkLogin.php');
-die("dead check login");
 
 // header
 require_once('templates/header.php');
