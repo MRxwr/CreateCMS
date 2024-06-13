@@ -17,6 +17,8 @@
 <tr>
 <th>Date</th>
 <th>Username</th>
+<th>Module</th>
+<th>Action</th>
 <th>Details</th>
 </tr>
 </thead>
@@ -33,6 +35,8 @@ while ( $row = $result->fetch_assoc() ){
 <tr>
 <td><?php echo $row["date"] ?></td>
 <td><?php echo $row["username"] ?></td>
+<td><?php echo $row["module"] ?></td>
+<td><?php echo $row["action"] ?></td>
 <td><?php echo $row["sqlQuery"] ?></td>
 </tr>
 <?php
