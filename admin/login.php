@@ -1,7 +1,6 @@
 <?php
 require_once('includes/config.php');
 require_once('includes/functions.php');
-require_once('includes/checkLogin.php');
 ?> 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +69,7 @@ require_once('includes/checkLogin.php');
 
 										</div>	
 										<div class="form-wrap">
-		<form action="" method="post">
+		<form action="includes/checkLogin.php" method="post">
 			<div class="form-group">
 				<label class="control-label mb-10" >Username</label>
 				<input type="text" class="form-control" name="username" required="">
