@@ -14,7 +14,7 @@ if ( isset($_COOKIE["cmsCreate"]) && !empty($_COOKIE["cmsCreate"]) && !isset($_G
 		$userType = 1;
 	}else{
 		setcookie("cmsCreate", "", time() - 3600, '/');
-		header('LOCATION: login.php?error=3');die();
+		header('LOCATION: login.php?error=5');die();
 	}
 }elseif( isset($_GET["page"]) && $_GET["page"] == "logout" ){
 	setcookie("cmsCreate", "", time() - 3600, '/');
