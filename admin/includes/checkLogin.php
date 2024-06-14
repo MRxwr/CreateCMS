@@ -1,5 +1,5 @@
 <?php
-if ( isset($_COOKIE["cmsCreate"]) && !empty($_COOKIE["cmsCreate"]) && !isset($_GET["page"]) ){
+if ( isset($_COOKIE["cmsCreate"]) && !empty($_COOKIE["cmsCreate"]) && !isset($_GET["page"]) || ( isset($_GET["page"]) && $_GET["page"] !== "logout") ){
 	if( $user = selectDBNew("user",[$_COOKIE["cmsCreate"]],"`hash` LIKE ? AND `status` = '0'","") ){
 		$userId = $user[0]["id"];
 		$username = $user[0]["username"];
