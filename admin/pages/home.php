@@ -218,7 +218,7 @@ while($row = $result->fetch_Assoc() ){
 				   <tr>
 					<td><?php echo $row["task"] ?></td>
 					<td><?php echo substr($row["date"],0,11) ?></td>
-					<td><a href="?page=details&id=<?php echo $row["id"] ?>&pid=<?php echo $row["clientId"] ?>&action=tasks">Go</a></td>
+					<td><a href="?page=details&action=tasks&pid=<?php echo $row["projectId"] ?>">Go</a></td>
 				  </tr>
 <?php
 }
@@ -269,7 +269,7 @@ while($row = $result->fetch_Assoc() ){
 				   <tr>
 					<td><?php echo $row["task"] ?></td>
 					<td><?php echo substr($row["expected"],0,10) ?></td>
-					<td><a href="?page=details&action=tasks&pid=<?php echo $row["clientId"] ?>">Go</a></td>
+					<td><a href="?page=details&action=tasks&pid=<?php echo $row["projectId"] ?>">Go</a></td>
 				  </tr>
 <?php
 }
