@@ -244,9 +244,9 @@ function whatsappNoti($order){
 
 function whatsappUltraMsg($to, $Msg){
 	if( $settings = selectDB("settings","`id` = '1'") ){
-		if( $settings[0]["whatsappStatus"] != 1 ){
-			$data = array();
-			return $data;		
+			if( $settings[0]["whatsappStatus"] != 1 ){
+				$data = array();
+				return $data;		
 			}else{
 			$data = array(
 				'token' => "{$settings[0]["whatsappToken"]}",
@@ -271,12 +271,14 @@ function whatsappUltraMsg($to, $Msg){
 			));
 			$response = curl_exec($curl);
 			curl_close($curl);
-			return $response;
+			//return $response;
 		}
 	}else{
 		$data = array();
-		return $data;
+		//return $data;
 	}
+	var_dump($response);die();
+	return $response;
 }
 
 function whatsappUltraMsgImage($to,$eventId, $inviteeLink){
