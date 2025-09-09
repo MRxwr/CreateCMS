@@ -242,34 +242,32 @@ function whatsappNoti($order){
 	return $response;
 }
 
-function whatsappUltraMsg($order){
-	GLOBAL $settingsTitle;
-	if( $whatsappNoti = selectDB("settings","`id` = '1'") ){
-		$whatsappNoti1 = json_decode($whatsappNoti[0]["whatsappNoti"],true);
-		$token = $whatsappNoti[0]["whatsappToken"];
-		if( $whatsappNoti1["status"] != 1 ){
+function whatsappUltraMsg($to, $Msg){
+	if( $settings = selectDB("settings","`id` = '1'") ){
+		if( $settings[0]["whatsappStatus"] != 1 ){
 			$data = array();
-		}else{
-			$data["type"] = "template";
-			$data["comapany_name"] = "createkuwait";
-			$data["lang"] = $whatsappNoti1["lang"];
-			$data["domain_token"] = $whatsappNoti1["domain_token"];
-			$data["to"] = $whatsappNoti1["to"];
-			$data["customer_name"] = $whatsappNoti1["name"];
-			$data["invoiceid"] = $order;
-			$data["invoice_name"] = "invoice-{$whatsappNoti1["name"]}-{$order}";
-			$data["invoice_url"] = getPDF($order);
-			$data["caption"] = urlencode("Hello {$settingsTitle}, You have a new order #{$order}. \n\nThis is an automated message to notify you when you get new orders, Courtesy of createkuwait. \n\nBest Regards, \ncreatekuwait.com");
+			return $data;		
+			}else{
+			$data = array(
+				'token' => "{$settings[0]["whatsappToken"]}",
+				'to' => "{$to}",
+				'body' => "{$Msg} \n\n automated message from Create CMS",
+			);
 			$curl = curl_init();
 			curl_setopt_array($curl, array(
-				CURLOPT_URL => "https://api.ultramsg.com/instance98521/messages/document?token={$token}&to=+{$data["to"]}&document={$data["invoice_url"]}&filename={$data["invoice_name"]}&caption={$data["caption"]}",
+				CURLOPT_URL => "https://api.ultramsg.com/{$settings[0]["InstanceId"]}/messages/chat",
 				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING => '',
+				CURLOPT_ENCODING => "",
 				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_TIMEOUT => 0,
-				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_TIMEOUT => 30,
+				CURLOPT_SSL_VERIFYHOST => 0,
+				CURLOPT_SSL_VERIFYPEER => 0,
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-				CURLOPT_CUSTOMREQUEST => 'POST',
+				CURLOPT_CUSTOMREQUEST => "POST",
+				CURLOPT_POSTFIELDS => http_build_query($data),
+				CURLOPT_HTTPHEADER => array(
+					"content-type: application/x-www-form-urlencoded"
+				),
 			));
 			$response = curl_exec($curl);
 			curl_close($curl);
@@ -277,6 +275,7 @@ function whatsappUltraMsg($order){
 		}
 	}else{
 		$data = array();
+		return $data;
 	}
 }
 

@@ -9,7 +9,7 @@ if( isset($_POST["username"]) && !empty($_POST["username"]) && isset($_POST["pas
 	}elseif( $user = selectDBNew("employee",[$_POST['username'],sha1($_POST['password'])],"`username` LIKE ? AND `password` LIKE ? AND `status` = '0'","") ){
 		setcookie('cmsCreate', md5(time().$_POST['username']), time() + (3600*24*30) , '/');
 		updateDB("employee",["hash"=>md5(time().$_POST['username'])],"`id` = {$user[0]["id"]}");
-		header("LOCATION: index.php?page=details&action=employees&id={$user[0]["id"]}");die();
+		header("LOCATION: index.php?p=Details&a=Employees&id={$user[0]["id"]}");die();
 	}else{
 		header('LOCATION: login.php?error=1');die();
 	}

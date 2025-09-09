@@ -2,15 +2,18 @@
 if ( isset($_POST["task"]) ){
 	if( is_uploaded_file($_FILES['file']['tmp_name']) ){
 		@$ext = end((explode(".", $_FILES['file']['name'])));
-		$directory = "logos/";
+		$directory = "files/";
 		$originalfile = $directory . md5(date("d-m-y").time().rand(111111,999999))."." . $ext;
 		move_uploaded_file($_FILES["file"]["tmp_name"], $originalfile);
-		$_POST["file"] = str_replace("logos/",'',$originalfile);
+		$_POST["file"] = str_replace("files/",'',$originalfile);
 	}else{
 		$_POST["file"] = "";
 	}
 	$table = "task";
 	insertDB($table,$_POST);
+	$user = selectDB("employee","`id` LIKE '".$_POST["to"]."'");
+	$Msg = "New Task Assigned to you: \n\n Task: ".$_POST["task"]."\n Expected Date: ".$_POST["expected"]."\n Assigned By: ".$username;
+	whatsappUltraMsg($user[0]["phone"],$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=Tasks");
 }
 if ( isset($_GET["doing"]) ){
@@ -18,6 +21,11 @@ if ( isset($_GET["doing"]) ){
 	$data = array('status'=>'1','finished'=>'','doing'=>$date);
 	$where = "`id` LIKE '".$_GET["doing"]."'";
 	updateDB($table,$data,$where);
+	$user = selectDB("employee","`id` LIKE '".$_POST["to"]."'");
+	// find task details then send msg to assgined by user that the employee started the task add the start date
+	$taskDetails = selectDB("task","`id` LIKE '".$_GET["doing"]."'");
+	$Msg = "Task Started: \n\n Task: ".$taskDetails[0]["task"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$user[0]["name"]."\n Start Date: ".$date;
+	whatsappUltraMsg($user[0]["phone"],$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
 if ( isset($_GET["done"]) ){
