@@ -34,7 +34,7 @@ require_once('includes/checkLogin.php');
 	<link href="../vendors/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet" type="text/css"/>
 	
 	<!-- Custom CSS -->
-	<link href="dist/css/style.css" rel="stylesheet" type="text/css">
+	<link href="dist/css/style.css?a<?php echo rand(00,11) . "=" . time(); ?>" rel="stylesheet" type="text/css">
 </head>
 
 <body>
