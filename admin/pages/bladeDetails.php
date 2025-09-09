@@ -10,7 +10,7 @@
 		<!-- Row -->
 		
 		<?php
-		if ( isset($_GET["action"]) && ( $_GET["action"] != 'employees' && $_GET["action"] != 'users' && $_GET["action"] != 'logs' ) ){
+		if ( isset($_GET["a"]) && ( $_GET["a"] != 'Employees' && $_GET["a"] != 'Users' && $_GET["a"] != 'Logs' ) ){
 		?>
 		<div class="row">
 		<div class="col-md-12">
@@ -43,40 +43,12 @@
 		
 		<?php 
 		}
-		if ( isset($_GET["action"]) && $_GET["action"] == 'tasks' ){
-			require_once('actions/tasks.php');
-		}elseif( isset($_GET["action"]) && $_GET["action"] == 'projects'  ){
-			require_once('actions/projects.php');
-		}elseif( isset($_GET["action"]) && $_GET["action"] == 'invoices'  ){
-			require_once('actions/invoices.php');
-		}elseif( isset($_GET["action"]) && $_GET["action"] == 'logs'  ){
-			require_once('actions/logs.php');
-		}elseif( isset($_GET["action"]) && $_GET["action"] == 'employees'  ){
-			require_once('actions/employees.php');
-		}elseif( isset($_GET["action"]) && $_GET["action"] == 'users'  ){
-			require_once('actions/users.php');
+		if( isset($_GET["a"]) && searchFile("actions","blade{$_GET["a"]}.php") ){
+			require_once("actions/".searchFile("actions","blade{$_GET["a"]}.php"));
 		}else{
-			$_GET["action"] = "projects";
-			require_once('actions/projects.php');
+			require_once("actions/bladeProjects.php");
 		}
-		
 		?>
-		
-		<!-- /Row -->
-	</div>
-
-<!-- Footer -->
-	<footer class="footer container-fluid pl-30 pr-30">
-		<div class="row">
-			<div class="col-sm-12">
-				<p>2021 &copy; Create Co. CMS</p>
-			</div>
-		</div>
-	</footer>
-	<!-- /Footer -->
-	
-</div>
-
 <script>
 /*
 <?php

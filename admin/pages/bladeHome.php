@@ -1,14 +1,3 @@
-<div class="right-sidebar-backdrop"></div>
-
-<!-- Main Content -->
-<div class="page-wrapper">
-	<div class="container-fluid pt-25">
-		<!-- Row -->
-		
-		<div class="row">
-		
-			<div class="col-md-12">
-				
 <div class="row">
 
 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
@@ -283,24 +272,4 @@ while($row = $result->fetch_Assoc() ){
 </div>
 </div>
 
-</div>				
-
-			</div>
-			
-		</div>
-		
-		<!-- /Row -->
-	</div>
-
-<!-- Footer -->
-	<footer class="footer container-fluid pl-30 pr-30">
-		<div class="row">
-			<div class="col-sm-12">
-				<p>2021 &copy; Create Co. CMS</p>
-			</div>
-		</div>
-	</footer>
-	<!-- /Footer -->
-	
 </div>
-<!-- /Main Content -->

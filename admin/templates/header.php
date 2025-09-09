@@ -1,3 +1,9 @@
+<?php
+// calling database
+require_once('includes/config.php');
+require_once('includes/functions.php');
+require_once('includes/checkLogin.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,4 +43,20 @@
 		<div class="la-anim-1"></div>
 	</div>
 	
-<div class="wrapper  theme-2-active pimary-color-green">
+<div class="wrapper  theme-2-active pimary-color-green"> 
+
+<?php
+require_once('templates/topMenu.php');
+require_once('templates/leftMenu.php');
+require_once('templates/rightMenu.php');
+?>
+<div class="right-sidebar-backdrop"></div>
+
+<!-- Main Content -->
+<div class="page-wrapper">
+	<div class="container-fluid pt-25">
+		<!-- Row -->
+		
+		<div class="row">
+		
+			<div class="col-md-12">

@@ -1,28 +1,11 @@
 <?php 
-// calling database
-require_once('includes/config.php');
-
-// loading functions
-require_once('includes/functions.php');
-
-// checking login
-require_once('includes/checkLogin.php');
-
-// header
 require_once('templates/header.php');
 
-// navbar
-require_once('templates/topMenu.php');
+if( isset($_GET["p"]) && searchFile("pages","blade{$_GET["p"]}.php") ){
+	require_once("pages/".searchFile("pages","blade{$_GET["p"]}.php"));
+}else{
+	require_once("pages/bladeHome.php");
+}
 
-// left menu
-require_once('templates/leftMenu.php');
-
-// right menu
-require_once('templates/rightMenu.php');
-
-// getting data
-require_once('templates/mainContent.php');
-
-// footer
 require_once('templates/footer.php');
 ?>

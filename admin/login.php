@@ -20,11 +20,11 @@ if( isset($_POST["username"]) && !empty($_POST["username"]) && isset($_POST["pas
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<title>Droopy I Fast build Admin dashboard for any platform</title>
-		<meta name="description" content="Droopy is a Dashboard & Admin Site Responsive Template by hencework." />
-		<meta name="keywords" content="admin, admin dashboard, admin template, cms, crm, Droopy Admin, Droopyadmin, premium admin templates, responsive admin, sass, panel, software, ui, visualization, web app, application" />
-		<meta name="author" content="hencework"/>
-		
+		<title>Create CMS</title>
+		<meta name="description" content="Create CMS is a Dashboard & Admin Site Responsive Template." />
+		<meta name="keywords" content="admin, admin dashboard, admin template, cms, crm, Create CMS, premium admin templates, responsive admin, sass, panel, software, ui, visualization, web app, application" />
+		<meta name="author" content="Create CMS Team"/>
+
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="favicon.ico">
 		<link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -49,7 +49,7 @@ if( isset($_POST["username"]) && !empty($_POST["username"]) && isset($_POST["pas
 				<div class="sp-logo-wrap pull-left">
 					<a href="index.html">
 						<img class="brand-img mr-10" src="../img/logo.png" alt="brand"/>
-						<span class="brand-text">Droopy</span>
+						<span class="brand-text">Create CMS</span>
 					</a>
 				</div>
 				<div class="form-group mb-0 pull-right">
@@ -69,7 +69,7 @@ if( isset($_POST["username"]) && !empty($_POST["username"]) && isset($_POST["pas
 								<div class="row">
 									<div class="col-sm-12 col-xs-12">
 										<div class="mb-30">
-											<h3 class="text-center txt-dark mb-10">Sign in to Droopy</h3>
+											<h3 class="text-center txt-dark mb-10">Sign in to Create CMS</h3>
 											<h6 class="text-center nonecase-font txt-grey">Enter your details below</h6>
 											<?php
 											if (isset($_GET["error"]) && $_GET["error"] = 1){

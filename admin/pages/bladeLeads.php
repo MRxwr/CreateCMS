@@ -201,21 +201,6 @@ if ( isset($_GET["return"]) ){
 		<?php
 		}
 		?>
-		<!-- /Row -->
-	</div>
-
-<!-- Footer -->
-	<footer class="footer container-fluid pl-30 pr-30">
-		<div class="row">
-			<div class="col-sm-12">
-				<p>2021 &copy; Create Co. CMS</p>
-			</div>
-		</div>
-	</footer>
-	<!-- /Footer -->
-	
-</div>
-
 <script>
 <?php
 if ( isset($image) || isset($_GET["customer"]) || isset($_GET["delete"]) || isset($_GET["return"]) ){
