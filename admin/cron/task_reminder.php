@@ -1,16 +1,6 @@
 <?php
-/**
- * Daily Task Reminder Cron Job
- * 
- * This script sends a daily reminder for all pending tasks to their respective
- * employees and users.
- * 
- * Recommended cron schedule: Daily at 9 AM
- * 0 9 * * * /usr/bin/php /path/to/task_reminder.php
- */
-
-// Include necessary files for database connection and functions
-require_once(__DIR__ . '/../includes/functions.php');
+require_once('../includes/config.php');
+require_once('../includes/functions.php');
 
 // Send daily reminders for all pending tasks
 sendDailyTaskReminders();
