@@ -250,7 +250,7 @@ function whatsappUltraMsg($to, $Msg){
 			$data = array(
 				'token' => "{$settings[0]["whatsappToken"]}",
 				'to' => "{$to}",
-				'body' => "{$Msg} \n\n automated message from Create CMS",
+				'body' => "{$Msg} \n\nThis is an automated message courtesy of Create CMS",
 			);
 			$curl = curl_init();
 			curl_setopt_array($curl, array(
