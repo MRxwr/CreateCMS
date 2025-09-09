@@ -11,24 +11,28 @@ if ( isset($_POST["userId"]) ){
 	}
 	$table = "client";
 	insertDB($table,$_POST);
+	header("Location: ?p=Leads");
 }
 if ( isset($_GET["delete"]) ){
 	$table = "client";
 	$data = array('type'=>'1');
 	$where = "`id` LIKE '".$_GET["delete"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Leads");
 }
 if ( isset($_GET["customer"]) ){
 	$table = "client";
 	$data = array('type'=>'2');
 	$where = "`id` LIKE '".$_GET["customer"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Leads");
 }
 if ( isset($_GET["return"]) ){
 	$table = "client";
 	$data = array('type'=>'0');
 	$where = "`id` LIKE '".$_GET["return"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Leads");
 }
 ?>
 
@@ -180,9 +184,9 @@ if ( isset($_GET["return"]) ){
 				<td><a href="logos/<?php echo $row["image"] ?>">Download</a></td>
 				<td>
 				
-				<a href="?page=leads&customer=<?php echo $row["id"] ?>" style="margin:3px"><i class="fa fa-user"></i></a>
-				
-				<a href="?page=leads&<?php echo $action[$i] . $row["id"] ?>" style="margin:3px"><i class="<?php echo $icon[$i] ?>"></i></a>
+				<a href="?p=Leads&customer=<?php echo $row["id"] ?>" style="margin:3px"><i class="fa fa-user"></i></a>
+
+				<a href="?p=Leads&<?php echo $action[$i] . $row["id"] ?>" style="margin:3px"><i class="<?php echo $icon[$i] ?>"></i></a>
 				</td>
 			</tr>
 		<?php

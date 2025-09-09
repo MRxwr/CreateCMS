@@ -12,24 +12,28 @@ if ( isset($_POST["title"]) ){
 	$table = "project";
 	$_POST["finished"] = '';
 	insertDB($table,$_POST);
+	header("Location: ?p=Details&id=".$_GET["id"]."&a=Projects");
 }
 if ( isset($_GET["delete"]) ){
 	$table = "project";
 	$data = array('status'=>'2', 'finished'=>'');
 	$where = "`id` LIKE '".$_GET["delete"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Details&id=".$_GET["id"]."&a=Projects");
 }
 if ( isset($_GET["done"]) ){
 	$table = "project";
 	$data = array('status'=>'1', 'finished'=>$date);
 	$where = "`id` LIKE '".$_GET["done"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Details&id=".$_GET["id"]."&a=Projects");
 }
 if ( isset($_GET["return"]) ){
 	$table = "project";
 	$data = array('status'=>'0', 'finished'=>'');
 	$where = "`id` LIKE '".$_GET["return"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Details&id=".$_GET["id"]."&a=Projects");
 }
 ?>
 <!-- /Title -->
@@ -203,15 +207,15 @@ if ( !empty($row["file"]) ){
 ?>
 </td>
 <td>
-<a href="?page=details<?php echo "&id=".$_GET["id"]."&pid=".$row["id"]."&action=tasks" ?>" style="margin:3px"><i class="fa fa-table"></i></a>
+<a href="?p=Details<?php echo "&id=".$_GET["id"]."&pid=".$row["id"]."&a=Tasks" ?>" style="margin:3px"><i class="fa fa-table"></i></a>
 
-<a href="?page=details<?php echo "&id=".$_GET["id"]."&action=invoices&pid=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-credit-card-alt"></i></a>
+<a href="?p=Details<?php echo "&id=".$_GET["id"]."&a=Invoices&pid=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-credit-card-alt"></i></a>
 <?php if ( $status[$i] != '1' ){  ?>
-<a href="?page=details<?php echo "&id=".$_GET["id"]."&action=".$_GET["action"]."&done=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-check"></i></a>
+<a href="?p=Details<?php echo "&id=".$_GET["id"]."&a=".$_GET["a"]."&done=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-check"></i></a>
 <?php }if ( $status[$i] != '0' ){  ?>
-<a href="?page=details<?php echo "&id=".$_GET["id"]."&action=".$_GET["action"]."&return=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-refresh"></i></a>
+<a href="?p=Details<?php echo "&id=".$_GET["id"]."&a=".$_GET["a"]."&return=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-refresh"></i></a>
 <?php }if ( $status[$i] != '2' ){  ?>
-<a href="?page=details<?php echo "&id=".$_GET["id"]."&action=".$_GET["action"]."&delete=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-trash"></i></a>
+<a href="?p=Details<?php echo "&id=".$_GET["id"]."&a=".$_GET["a"]."&delete=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-trash"></i></a>
 <?php } ?>
 </td>
 </tr>

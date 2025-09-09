@@ -1,5 +1,4 @@
 <div class="row">
-
 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 <div class="panel panel-default card-view pa-0">
 <div class="panel-wrapper collapse in">
@@ -114,7 +113,7 @@ while($row = $result->fetch_Assoc() ){
 				   <tr>
 					<td><?php echo $row["title"] ?></td>
 					<td><?php echo substr($row["date"],0,11) ?></td>
-					<td><a href="?page=details&action=tasks&id=<?php echo $row["clientId"] ?>&pid=<?php echo $row["id"] ?>">Go</a></td>
+					<td><a href="?p=Details&a=Tasks&id=<?php echo $row["clientId"] ?>&pid=<?php echo $row["id"] ?>">Go</a></td>
 				  </tr>
 <?php
 }
@@ -157,7 +156,7 @@ while($row = $result->fetch_Assoc() ){
 				   <tr>
 					<td><?php echo $row["title"] ?></td>
 					<td><?php echo substr($row["expected"],0,10) ?></td>
-					<td><a href="?page=details&action=tasks&id=<?php echo $row["clientId"] ?>&pid=<?php echo $row["id"] ?>">Go</a></td>
+					<td><a href="?p=Details&a=Tasks&id=<?php echo $row["clientId"] ?>&pid=<?php echo $row["id"] ?>">Go</a></td>
 				  </tr>
 <?php
 }
@@ -207,7 +206,7 @@ while($row = $result->fetch_Assoc() ){
 				   <tr>
 					<td><?php echo $row["task"] ?></td>
 					<td><?php echo substr($row["date"],0,11) ?></td>
-					<td><a href="?page=details&action=tasks&pid=<?php echo $row["projectId"] ?>">Go</a></td>
+					<td><a href="?p=Details&a=Tasks&pid=<?php echo $row["projectId"] ?>">Go</a></td>
 				  </tr>
 <?php
 }
@@ -258,7 +257,7 @@ while($row = $result->fetch_Assoc() ){
 				   <tr>
 					<td><?php echo $row["task"] ?></td>
 					<td><?php echo substr($row["expected"],0,10) ?></td>
-					<td><a href="?page=details&action=tasks&pid=<?php echo $row["projectId"] ?>">Go</a></td>
+					<td><a href="?p=Details&a=Tasks&pid=<?php echo $row["projectId"] ?>">Go</a></td>
 				  </tr>
 <?php
 }

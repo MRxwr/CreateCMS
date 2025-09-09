@@ -6,24 +6,31 @@ if ( isset($_GET["doing"]) ){
 	$msg = selectTask($_GET["doing"],"DOING");
 	updateDB($table,$data,$where);
 	notifyMe($_GET["doing"],$msg);
+	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
 if ( isset($_GET["done"]) ){
 	$table = "task";
 	$data = array('status'=>'2','finished'=>$date);
 	$where = "`id` LIKE '".$_GET["done"]."'";
 	updateDB($table,$data,$where);
+	$msg = selectTask($_GET["done"],"FINISHED");
+	notifyMe($_GET["done"],$msg);
 }
 if ( isset($_GET["return"]) ){
 	$table = "task";
 	$data = array('status'=>'0','finished'=>'','doing'=>'');
 	$where = "`id` LIKE '".$_GET["return"]."'";
 	updateDB($table,$data,$where);
+	$msg = selectTask($_GET["return"],"PENDING");
+	notifyMe($_GET["return"],$msg);
 }
 if ( isset($_GET["delete"]) ){
 	$table = "task";
 	$data = array('status'=>'2');
 	$where = "`id` LIKE '".$_GET["delete"]."'";
 	updateDB($table,$data,$where);
+	notifyMe($_GET["delete"],"DELETED");
+	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
 
 $status 		= array('0','1','2');
@@ -116,16 +123,16 @@ if ( !empty($row["file"]) ){
 </td>
 <td>
 <?php if ( $status[$i] == '0' ){  ?>
-<a href="?page=details<?php echo "&id=".$_GET["id"]."&pid=".$row["pid"]."&action=".$_GET["action"]."&doing=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Doing"><i class="fa fa-circle-o-notch"></i></a>
+<a href="?p=Details<?php echo "&id=".$_GET["id"]."&pid=".$row["pid"]."&a=".$_GET["a"]."&doing=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Doing"><i class="fa fa-circle-o-notch"></i></a>
 <?php }if ( $status[$i] != '2' ){  ?>
-<a href="?page=details<?php echo "&id=".$_GET["id"]."&pid=".$row["pid"]."&action=".$_GET["action"]."&done=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Done"><i class="fa fa-check"></i></a>
+<a href="?p=Details<?php echo "&id=".$_GET["id"]."&pid=".$row["pid"]."&a=".$_GET["a"]."&done=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Done"><i class="fa fa-check"></i></a>
 <?php }if ( $status[$i] != '0' ){  ?>
-<a href="?page=details<?php echo "&id=".$_GET["id"]."&pid=".$row["pid"]."&action=".$_GET["action"]."&return=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Pending"><i class="fa fa-refresh"></i></a>
+<a href="?p=Details<?php echo "&id=".$_GET["id"]."&pid=".$row["pid"]."&a=".$_GET["a"]."&return=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Pending"><i class="fa fa-refresh"></i></a>
 <?php } ?>
 
-<a href="?page=comments<?php echo "&id=".$row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Comment"><i class="fa fa-comments"></i></a>
+<a href="?p=Comments<?php echo "&id=".$row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Comment"><i class="fa fa-comments"></i></a>
 
-<a href="?page=details<?php echo "&id=".$_GET["id"]."&pid=".$row["pid"]."&action=".$_GET["action"]."&delete=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Delete"><i class="fa fa-trash"></i></a>
+<a href="?p=Details<?php echo "&id=".$_GET["id"]."&pid=".$row["pid"]."&a=".$_GET["a"]."&delete=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Delete"><i class="fa fa-trash"></i></a>
 
 </td>
 </tr>

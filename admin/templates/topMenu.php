@@ -1,6 +1,6 @@
 <?php
 if ( $userType == 1 ){
-	$url = "index.php?page=details&action=employees&id={$userId}";
+	$url = "index.php?p=Details&a=Employees&id={$userId}";
 }else{
 	$url = "index.php";
 }

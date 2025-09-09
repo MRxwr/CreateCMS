@@ -3,18 +3,21 @@ if ( isset($_POST["name"]) ){
 	$table = "user";
 	$_POST["password"] = sha1($_POST["password"]);
 	insertDB($table,$_POST);
+	header("Location: ?p=Users");
 }
 if ( isset($_GET["delete"]) ){
 	$table = "user";
 	$data = array('status'=>'1');
 	$where = "`id` LIKE '".$_GET["delete"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Users");
 }
 if ( isset($_GET["return"]) ){
 	$table = "user";
 	$data = array('status'=>'0');
 	$where = "`id` LIKE '".$_GET["return"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Users");
 }
 ?>
 
@@ -171,9 +174,9 @@ while ( $row = $result->fetch_assoc() ){
 <td><a href="tel:<?php echo $row["phone"] ?>">call</a></td>
 <td>
 
-<a href="?page=details&action=users&id=<?php echo $row["id"] ?>" style="margin:3px"><i class="fa fa-table"></i></a>
+<a href="?p=Details&a=Users&id=<?php echo $row["id"] ?>" style="margin:3px"><i class="fa fa-table"></i></a>
 
-<a href="?page=users&<?php echo $action[$i] . $row["id"] ?>" style="margin:3px"><i class="<?php echo $icon[$i] ?>"></i></a>
+<a href="?p=Users&<?php echo $action[$i] . $row["id"] ?>" style="margin:3px"><i class="<?php echo $icon[$i] ?>"></i></a>
 
 </td>
 </tr>

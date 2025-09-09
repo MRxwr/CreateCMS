@@ -3,6 +3,7 @@ if ( isset($_POST["taskId"]) ){
 	$table = "comments";
 	$_POST["date"] = $date;
 	insertDB($table,$_POST);
+	header("Location: ?p=Comments&id=".$_POST["taskId"]);
 }
 ?>
 

@@ -12,30 +12,35 @@ if ( isset($_POST["ref"]) ){
 	$table = "invoice";
 	insertDB($table,$_POST);
 	$_POST["table"] = "invoice";
+	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=Invoices");
 }
 if ( isset($_GET["delete"]) ){
 	$table = "invoice";
 	$data = array('status'=>'1');
 	$where = "`id` LIKE '".$_GET["delete"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=Invoices");
 }
 if ( isset($_GET["cost"]) ){
 	$table = "invoice";
 	$data = array('type'=>'2');
 	$where = "`id` LIKE '".$_GET["cost"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=Invoices");
 }
 if ( isset($_GET["paid"]) ){
 	$table = "invoice";
 	$data = array('type'=>'1');
 	$where = "`id` LIKE '".$_GET["paid"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=Invoices");
 }
 if ( isset($_GET["pending"]) ){
 	$table = "invoice";
 	$data = array('type'=>'0');
 	$where = "`id` LIKE '".$_GET["pending"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=Invoices");
 }
 ?>
 <!-- /Title -->
@@ -220,7 +225,7 @@ while ( $row = $result->fetch_assoc() ){
 <?php
 if ( isset($_GET["paid"]) || isset($_GET["cost"]) || isset($_GET["pending"]) ){
 	?>
-	window.location.replace("?page=details&id="+'<?php echo $_GET["id"] . "&pid=" . $_GET["pid"] ?>'+"&action=invoices");
+	window.location.replace("?p=Details&id="+'<?php echo $_GET["id"] . "&pid=" . $_GET["pid"] ?>'+"&a=Invoices");
 	<?php
 }
 ?>

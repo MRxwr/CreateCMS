@@ -1,4 +1,3 @@
-
 <!-- Left Sidebar Menu -->
 <div class="fixed-sidebar-left">
 	<ul class="nav navbar-nav side-nav nicescroll-bar">
@@ -10,7 +9,7 @@
 if ( $userType == 0 ){
 ?>
 		<li>
-			<a class="active" href="?page=home" >
+			<a class="active" href="?p=Home" >
 				<div class="pull-left">
 					<i class="zmdi zmdi-landscape mr-20"></i>
 					<span class="right-nav-text">Dashboard</span>
@@ -19,7 +18,7 @@ if ( $userType == 0 ){
 				<div class="clearfix"></div>
 			</a>
 			
-			<a class="" href="?page=leads" >
+			<a class="" href="?p=Leads" >
 				<div class="pull-left">
 					<i class="fa fa-users mr-20"></i>
 					<span class="right-nav-text">Leads</span>
@@ -28,7 +27,7 @@ if ( $userType == 0 ){
 				<div class="clearfix"></div>
 			</a>
 			
-			<a class="" href="?page=customers" >
+			<a class="" href="?p=Customers" >
 				<div class="pull-left">
 					<i class="fa fa-user mr-20"></i>
 					<span class="right-nav-text">Customers</span>
@@ -37,7 +36,7 @@ if ( $userType == 0 ){
 				<div class="clearfix"></div>
 			</a>
 			
-			<a class="" href="?page=employees" >
+			<a class="" href="?p=Employees" >
 				<div class="pull-left">
 					<i class="fa fa-user-md mr-20"></i>
 					<span class="right-nav-text">employees</span>
@@ -46,7 +45,7 @@ if ( $userType == 0 ){
 				<div class="clearfix"></div>
 			</a>
 			
-			<a class="" href="?page=users" >
+			<a class="" href="?p=Users" >
 				<div class="pull-left">
 					<i class="fa fa-user-plus mr-20"></i>
 					<span class="right-nav-text">Users</span>
@@ -55,7 +54,7 @@ if ( $userType == 0 ){
 				<div class="clearfix"></div>
 			</a>
 			
-			<a class="" href="?page=details&action=logs" >
+			<a class="" href="?p=Details&a=Logs" >
 				<div class="pull-left">
 					<i class="fa fa-clock-o mr-20"></i>
 					<span class="right-nav-text">History</span>
@@ -64,7 +63,7 @@ if ( $userType == 0 ){
 				<div class="clearfix"></div>
 			</a>
 			
-			<a class="" href="?page=settings" >
+			<a class="" href="?p=Settings" >
 				<div class="pull-left">
 					<i class="fa fa-gears mr-20"></i>
 					<span class="right-nav-text">Settings</span>

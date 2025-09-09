@@ -2,35 +2,24 @@
 if ( isset($_POST["name"]) ){
 	$table = "employee";
 	insertDB($table,$_POST);
+	header("Location: ?p=Employees");
 }
 if ( isset($_GET["delete"]) ){
 	$table = "employee";
 	$data = array('status'=>'1');
 	$where = "`id` LIKE '".$_GET["delete"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Employees");
 }
 if ( isset($_GET["return"]) ){
 	$table = "employee";
 	$data = array('status'=>'0');
 	$where = "`id` LIKE '".$_GET["return"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Employees");
 }
 ?>
-
-<div class="right-sidebar-backdrop"></div>
-
-<!-- Main Content -->
-<div class="page-wrapper">
-	<div class="container-fluid pt-25">
-		<!-- Row -->
-		
-		<div class="row">
-		
-			
-<!-- /Title -->
-
 <div class="row">
-
 <div class="col-md-12">
 <div class="panel panel-default card-view">
 <div class="panel-heading">
@@ -175,9 +164,9 @@ while ( $row = $result->fetch_assoc() ){
 <td><?php echo $row["user"] ?></td>
 <td>
 
-<a href="?page=details&action=employees&id=<?php echo $row["id"] ?>" style="margin:3px"><i class="fa fa-table"></i></a>
+<a href="?p=Details&a=Employees&id=<?php echo $row["id"] ?>" style="margin:3px"><i class="fa fa-table"></i></a>
 
-<a href="?page=employees&<?php echo $action[$i] . $row["id"] ?>" style="margin:3px"><i class="<?php echo $icon[$i] ?>"></i></a>
+<a href="?p=Employees&<?php echo $action[$i] . $row["id"] ?>" style="margin:3px"><i class="<?php echo $icon[$i] ?>"></i></a>
 
 </td>
 </tr>

@@ -4,18 +4,21 @@ if ( isset($_GET["delete"]) ){
 	$data = array('status'=>'2');
 	$where = "`id` LIKE '".$_GET["delete"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Details&id=".$_GET["id"]."&a=".$_GET["a"]);
 }
 if ( isset($_GET["done"]) ){
 	$table = "project";
 	$data = array('status'=>'1');
 	$where = "`id` LIKE '".$_GET["done"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Details&id=".$_GET["id"]."&a=".$_GET["a"]);
 }
 if ( isset($_GET["return"]) ){
 	$table = "project";
 	$data = array('status'=>'0');
 	$where = "`id` LIKE '".$_GET["return"]."'";
 	updateDB($table,$data,$where);
+	header("Location: ?p=Details&id=".$_GET["id"]."&a=".$_GET["a"]);
 }
 ?>
 
@@ -74,13 +77,13 @@ while ( $row = $result->fetch_assoc() ){
 <td><?php echo $row["details"] ?></td>
 <td><?php echo $row["username"] ?></td>
 <td>
-<a href="?page=details<?php echo "&id=".$row["clientId"]."&pid=".$row["id"]."&action=tasks" ?>" style="margin:3px"><i class="fa fa-table"></i></a>
+<a href="?p=Details<?php echo "&id=".$row["clientId"]."&pid=".$row["id"]."&a=Tasks" ?>" style="margin:3px"><i class="fa fa-table"></i></a>
 
-<a href="?page=details<?php echo "&id=".$row["clientId"]."&action=".$_GET["action"]."&done=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-check"></i></a>
+<a href="?p=Details<?php echo "&id=".$row["clientId"]."&a=".$_GET["a"]."&done=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-check"></i></a>
 
-<a href="?page=details<?php echo "&id=".$row["clientId"]."&action=".$_GET["action"]."&delete=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-trash"></i></a>
+<a href="?p=Details<?php echo "&id=".$row["clientId"]."&a=".$_GET["a"]."&delete=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-trash"></i></a>
 
-<a href="?page=details<?php echo "&id=".$row["clientId"]."&action=".$_GET["action"]."&return=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-refresh"></i></a>
+<a href="?p=Details<?php echo "&id=".$row["clientId"]."&a=".$_GET["a"]."&return=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-refresh"></i></a>
 
 </td>
 </tr>
