@@ -14,14 +14,6 @@ if ( isset($_GET["return"]) ){
 	header("Location: ?p=Customers");
 }
 ?>
-
-<div class="right-sidebar-backdrop"></div>
-
-<!-- Main Content -->
-<div class="page-wrapper">
-	<div class="container-fluid pt-25">
-				
-				<!-- Row -->
 		<?php
 		$typeOfCustomer = array('2','3');
 		$arrayOfTitles 	= array('List Of Customer','Lost Customers');

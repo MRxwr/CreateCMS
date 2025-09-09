@@ -21,20 +21,7 @@ if ( isset($_GET["return"]) ){
 }
 ?>
 
-<div class="right-sidebar-backdrop"></div>
-
-<!-- Main Content -->
-<div class="page-wrapper">
-	<div class="container-fluid pt-25">
-		<!-- Row -->
-		
-		<div class="row">
-		
-			
-<!-- /Title -->
-
 <div class="row">
-
 <div class="col-md-12">
 <div class="panel panel-default card-view">
 <div class="panel-heading">

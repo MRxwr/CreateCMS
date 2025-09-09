@@ -35,14 +35,6 @@ if ( isset($_GET["return"]) ){
 	header("Location: ?p=Leads");
 }
 ?>
-
-<div class="right-sidebar-backdrop"></div>
-
-<!-- Main Content -->
-<div class="page-wrapper">
-	<div class="container-fluid pt-25">
-		<!-- Row -->
-		
 		<div class="row">
 		
 			<div class="col-md-12">

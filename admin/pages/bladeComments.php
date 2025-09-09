@@ -6,13 +6,6 @@ if ( isset($_POST["taskId"]) ){
 	header("Location: ?p=Comments&id=".$_POST["taskId"]);
 }
 ?>
-
-<div class="right-sidebar-backdrop"></div>
-
-<!-- Main Content -->
-<div class="page-wrapper">
-<div class="container-fluid pt-25">
-<!-- Row -->
 <form method="post" action="">
 <div class="row">
 <div class="col-md-12">
