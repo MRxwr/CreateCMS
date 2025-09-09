@@ -33,7 +33,7 @@ if ( $userType == 1 ){
 
 					<li class="divider"></li>
 					<li>
-						<a href="?p=Logout"><i class="zmdi zmdi-power"></i><span>Log Out</span></a>
+						<a href="logout.php"><i class="zmdi zmdi-power"></i><span>Log Out</span></a>
 					</li>
 				</ul>
 			</li>
