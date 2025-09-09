@@ -90,7 +90,7 @@ function sendDailyTaskReminders() {
             $message .= "Please update the status of your tasks when completed.";
             // Send WhatsApp message to employee
             $response = whatsappUltraMsg($phone, $message);
-            }
+        }
         // Send a single consolidated message to each user (task creator)
         foreach ($userTasks as $phone => $data) {
             $message = "Daily Task Status Report:\n\nHello {$data['username']},\n\nYou have assigned " . count($data['tasks']) . " pending tasks:\n\n";
