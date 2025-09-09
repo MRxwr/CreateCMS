@@ -12,8 +12,11 @@ if ( isset($_POST["task"]) ){
 	$table = "task";
 	insertDB($table,$_POST);
 	$user = selectDB("employee","`id` LIKE '".$_POST["to"]."'");
-	$Msg = "New Task Assigned to you: \n\n Task: ".$_POST["task"]."\n Expected Date: ".$_POST["expected"]."\n Assigned By: ".$username;
+	$project = selectDB("project","`id` LIKE '".$_POST["projectId"]."'");
+	$Msg = "New Task Assigned to you: \n\n Task: ".$_POST["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$_POST["expected"]."\n Assigned By: ".$username;
 	whatsappUltraMsg($user[0]["phone"],$Msg);
+	$Msg = "New Task Created: \n\n Task: ".$_POST["task"]."\n Expected Date: ".$_POST["expected"]."\n Assigned To: ".$user[0]["name"]."\n Project: ".$project[0]["title"]."\n Assigned By: ".$username;
+	whatsappUltraMsg($userPhone,$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=Tasks");
 }
 if ( isset($_GET["doing"]) ){
@@ -21,10 +24,14 @@ if ( isset($_GET["doing"]) ){
 	$data = array('status'=>'1','finished'=>'','doing'=>$date);
 	$where = "`id` LIKE '".$_GET["doing"]."'";
 	updateDB($table,$data,$where);
-	$user = selectDB("employee","`id` LIKE '".$_POST["to"]."'");
-	// find task details then send msg to assgined by user that the employee started the task add the start date
+	// get task details and send notification to both employee and user and add the start date
 	$taskDetails = selectDB("task","`id` LIKE '".$_GET["doing"]."'");
-	$Msg = "Task Started: \n\n Task: ".$taskDetails[0]["task"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$user[0]["name"]."\n Start Date: ".$date;
+	$employee = selectDB("employee","`id` LIKE '".$taskDetails[0]["to"]."'");
+	$user = selectDB("user","`id` LIKE '".$taskDetails[0]["by"]."'");
+	$project = selectDB("project","`id` LIKE '".$taskDetails[0]["projectId"]."'");
+	$Msg = "Task Started: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned By: ".$user[0]["username"]."\n Start Date: ".$date;
+	whatsappUltraMsg($employee[0]["phone"],$Msg);
+	$Msg = "Task Started: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$employee[0]["name"]."\n Start Date: ".$date;
 	whatsappUltraMsg($user[0]["phone"],$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
@@ -33,6 +40,15 @@ if ( isset($_GET["done"]) ){
 	$data = array('status'=>'2','finished'=>$date);
 	$where = "`id` LIKE '".$_GET["done"]."'";
 	updateDB($table,$data,$where);
+	// get task details and send notification to both employee and user and add the finish date
+	$taskDetails = selectDB("task","`id` LIKE '".$_GET["done"]."'");
+	$employee = selectDB("employee","`id` LIKE '".$taskDetails[0]["to"]."'");
+	$user = selectDB("user","`id` LIKE '".$taskDetails[0]["by"]."'");
+	$project = selectDB("project","`id` LIKE '".$taskDetails[0]["projectId"]."'");
+	$Msg = "Task Finished: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned By: ".$user[0]["username"]."\n Finish Date: ".$date;
+	whatsappUltraMsg($employee[0]["phone"],$Msg);
+	$Msg = "Task Finished: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$employee[0]["name"]."\n Finish Date: ".$date;
+	whatsappUltraMsg($user[0]["phone"],$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
 if ( isset($_GET["return"]) ){
@@ -40,6 +56,15 @@ if ( isset($_GET["return"]) ){
 	$data = array('status'=>'0','finished'=>'','doing'=>'');
 	$where = "`id` LIKE '".$_GET["return"]."'";
 	updateDB($table,$data,$where);
+	// get task details and send notification to both employee and user and remove the start date
+	$taskDetails = selectDB("task","`id` LIKE '".$_GET["return"]."'");
+	$employee = selectDB("employee","`id` LIKE '".$taskDetails[0]["to"]."'");
+	$user = selectDB("user","`id` LIKE '".$taskDetails[0]["by"]."'");
+	$project = selectDB("project","`id` LIKE '".$taskDetails[0]["projectId"]."'");
+	$Msg = "Task Returned: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned By: ".$user[0]["username"];
+	whatsappUltraMsg($employee[0]["phone"],$Msg);
+	$Msg = "Task Returned: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$employee[0]["name"];
+	whatsappUltraMsg($user[0]["phone"],$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
 if ( isset($_GET["delete"]) ){
@@ -47,6 +72,15 @@ if ( isset($_GET["delete"]) ){
 	$data = array('status'=>'2');
 	$where = "`id` LIKE '".$_GET["delete"]."'";
 	updateDB($table,$data,$where);
+	// get task details and send notification to both employee and user and remove the start date
+	$taskDetails = selectDB("task","`id` LIKE '".$_GET["delete"]."'");
+	$employee = selectDB("employee","`id` LIKE '".$taskDetails[0]["to"]."'");
+	$user = selectDB("user","`id` LIKE '".$taskDetails[0]["by"]."'");
+	$project = selectDB("project","`id` LIKE '".$taskDetails[0]["projectId"]."'");
+	$Msg = "Task Deleted: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned By: ".$user[0]["username"];
+	whatsappUltraMsg($employee[0]["phone"],$Msg);
+	$Msg = "Task Deleted: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$employee[0]["name"];
+	whatsappUltraMsg($user[0]["phone"],$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
 ?>

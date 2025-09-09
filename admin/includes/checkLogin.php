@@ -6,12 +6,14 @@ if ( isset($_COOKIE["cmsCreate"]) && !empty($_COOKIE["cmsCreate"]) && !isset($_G
 		date_default_timezone_set('Asia/Kuwait');
 		$date = date('Y-m-d H:i:s');
 		$userType = 0;
+		$userPhone = $user[0]["phone"];
 	}elseif( $user = selectDBNew("employee",[$_COOKIE["cmsCreate"]],"`hash` LIKE ? AND `status` = '0'","") ){
 		$userId = $user[0]["id"];
 		$username = $user[0]["username"];
 		date_default_timezone_set('Asia/Kuwait');
 		$date = date('Y-m-d H:i:s');
 		$userType = 1;
+		$userPhone = $user[0]["phone"];
 	}else{
 		setcookie("cmsCreate", "", time() - 3600, '/');
 		header('LOCATION: login.php?error=5');die();
