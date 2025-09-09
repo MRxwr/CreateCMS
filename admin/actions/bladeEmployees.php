@@ -3,9 +3,8 @@ if ( isset($_GET["doing"]) ){
 	$table = "task";
 	$data = array('status'=>'1','finished'=>'','doing'=>$date);
 	$where = "`id` LIKE '".$_GET["doing"]."'";
-	$msg = selectTask($_GET["doing"],"DOING");
 	updateDB($table,$data,$where);
-	notifyMe($_GET["doing"],$msg);
+	notifyMe($_GET["doing"],"DOING");
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
 if ( isset($_GET["done"]) ){
@@ -13,16 +12,16 @@ if ( isset($_GET["done"]) ){
 	$data = array('status'=>'2','finished'=>$date);
 	$where = "`id` LIKE '".$_GET["done"]."'";
 	updateDB($table,$data,$where);
-	$msg = selectTask($_GET["done"],"FINISHED");
-	notifyMe($_GET["done"],$msg);
+	notifyMe($_GET["done"],"FINISHED");
+	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
 if ( isset($_GET["return"]) ){
 	$table = "task";
 	$data = array('status'=>'0','finished'=>'','doing'=>'');
 	$where = "`id` LIKE '".$_GET["return"]."'";
 	updateDB($table,$data,$where);
-	$msg = selectTask($_GET["return"],"PENDING");
-	notifyMe($_GET["return"],$msg);
+	notifyMe($_GET["return"],"PENDING");
+	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
 if ( isset($_GET["delete"]) ){
 	$table = "task";

@@ -199,43 +199,57 @@ function getTotals($table, $where){
 	}
 }
 
-function notifyMe($id,$msg){
+function notifyMe($id, $status){
 	GLOBAL $dbconnect, $userId, $date;
 	$check = [';','"',"'"];
-	$msg = str_replace($check,"",$msg);
 	$id = str_replace($check,"",$id);
 	
-	$sql = "SELECT * FROM `task` WHERE `id` LIKE '".$id."'";
-	$result = $dbconnect->query($sql);
-	$row = $result->fetch_assoc();
-	$to = $row["by"];
-	$sql1 = "INSERT INTO `notifications`
-			(`date`,`from`,`to`,`msg`)
-			VALUES
-			('".$date."','".$userId."','".$to."','".$msg."')
-			";
-	$dbconnect->query($sql1);
+	$taskData = selectTask($id, $status);
+	if(!$taskData) return;
+	
+	// Get employee and user info
+	$employee = selectDB("employee","`id` LIKE '".$taskData["to"]."'");
+	$user = selectDB("user","`id` LIKE '".$taskData["by"]."'");
+	
+	// Format message based on status
+	if($status == "DOING" || $status == "STARTED") {
+		$Msg = "Task Started:\n\nProject: ".$taskData["title"]."\nTask Details: ".$taskData["task"]."\nAssigned By: ".$taskData["username"]."\nAssigned To: ".$taskData["name"]."\nStart Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskData["expected"], 0, 10);
+	} elseif($status == "FINISHED" || $status == "DONE") {
+		$Msg = "Task Finished:\n\nProject: ".$taskData["title"]."\nTask Details: ".$taskData["task"]."\nAssigned By: ".$taskData["username"]."\nAssigned To: ".$taskData["name"]."\nFinish Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskData["expected"], 0, 10);
+	} elseif($status == "PENDING" || $status == "RETURNED") {
+		$Msg = "Task Returned:\n\nProject: ".$taskData["title"]."\nTask Details: ".$taskData["task"]."\nAssigned By: ".$taskData["username"]."\nAssigned To: ".$taskData["name"]."\nExpected Date: ".substr($taskData["expected"], 0, 10);
+	} elseif($status == "DELETED") {
+		$Msg = "Task Deleted:\n\nProject: ".$taskData["title"]."\nTask Details: ".$taskData["task"]."\nAssigned By: ".$taskData["username"]."\nAssigned To: ".$taskData["name"]."\nExpected Date: ".substr($taskData["expected"], 0, 10);
+	}
+	
+	// Send WhatsApp messages
+	if(isset($employee[0]["phone"])) {
+		whatsappUltraMsg($employee[0]["phone"], $Msg);
+	}
+	
+	if(isset($user[0]["phone"])) {
+		whatsappUltraMsg($user[0]["phone"], $Msg);
+	}
 }
 
 function selectTask($id,$status){
 	GLOBAL $dbconnect, $userId, $date;
 	$check = [';','"',"'"];
 	$id = str_replace($check,"",$id);
-	$sql1 = "SELECT t.*, p.title, e.name
+	$sql1 = "SELECT t.*, p.title, e.name, u.username
 			FROM `task` as t
 			JOIN `project` as p
 			ON p.id = t.projectId
 			JOIN `employee` as e
 			ON e.id = t.to
+			JOIN `user` as u
+			ON u.id = t.by
 			WHERE t.id LIKE '".$id."'
 			";
 	if($result = $dbconnect->query($sql1)){
 		$row = $result->fetch_assoc();
-		$msg = "Task status changed to " . $status . " By " . $row["name"] . " of " . $row["title"] . " project.";
-		return $msg;
-	}else{
-		return 0;
+		return $row;
 	}
-	
+	return false;
 }
 ?>

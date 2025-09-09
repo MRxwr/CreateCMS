@@ -13,9 +13,9 @@ if ( isset($_POST["task"]) ){
 	insertDB($table,$_POST);
 	$user = selectDB("employee","`id` LIKE '".$_POST["to"]."'");
 	$project = selectDB("project","`id` LIKE '".$_POST["projectId"]."'");
-	$Msg = "New Task Assigned to you: \n\n Task: ".$_POST["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$_POST["expected"]."\n Assigned By: ".$username;
+	$Msg = "New Task Assigned to you:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$_POST["task"]."\nAssigned By: ".$username."\nAssigned To: ".$user[0]["name"]."\nExpected Date: ".substr($_POST["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
-	$Msg = "New Task Created: \n\n Task: ".$_POST["task"]."\n Expected Date: ".$_POST["expected"]."\n Assigned To: ".$user[0]["name"]."\n Project: ".$project[0]["title"]."\n Assigned By: ".$username;
+	$Msg = "New Task Created:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$_POST["task"]."\nAssigned By: ".$username."\nAssigned To: ".$user[0]["name"]."\nExpected Date: ".substr($_POST["expected"], 0, 10);
 	whatsappUltraMsg($userPhone,$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=Tasks");
 }
@@ -29,9 +29,9 @@ if ( isset($_GET["doing"]) ){
 	$employee = selectDB("employee","`id` LIKE '".$taskDetails[0]["to"]."'");
 	$user = selectDB("user","`id` LIKE '".$taskDetails[0]["by"]."'");
 	$project = selectDB("project","`id` LIKE '".$taskDetails[0]["projectId"]."'");
-	$Msg = "Task Started: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned By: ".$user[0]["username"]."\n Start Date: ".$date;
+	$Msg = "Task Started:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nStart Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($employee[0]["phone"],$Msg);
-	$Msg = "Task Started: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$employee[0]["name"]."\n Start Date: ".$date;
+	$Msg = "Task Started:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nStart Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
@@ -45,9 +45,9 @@ if ( isset($_GET["done"]) ){
 	$employee = selectDB("employee","`id` LIKE '".$taskDetails[0]["to"]."'");
 	$user = selectDB("user","`id` LIKE '".$taskDetails[0]["by"]."'");
 	$project = selectDB("project","`id` LIKE '".$taskDetails[0]["projectId"]."'");
-	$Msg = "Task Finished: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned By: ".$user[0]["username"]."\n Finish Date: ".$date;
+	$Msg = "Task Finished:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nFinish Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($employee[0]["phone"],$Msg);
-	$Msg = "Task Finished: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$employee[0]["name"]."\n Finish Date: ".$date;
+	$Msg = "Task Finished:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nFinish Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
@@ -61,9 +61,9 @@ if ( isset($_GET["return"]) ){
 	$employee = selectDB("employee","`id` LIKE '".$taskDetails[0]["to"]."'");
 	$user = selectDB("user","`id` LIKE '".$taskDetails[0]["by"]."'");
 	$project = selectDB("project","`id` LIKE '".$taskDetails[0]["projectId"]."'");
-	$Msg = "Task Returned: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned By: ".$user[0]["username"];
+	$Msg = "Task Returned:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($employee[0]["phone"],$Msg);
-	$Msg = "Task Returned: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$employee[0]["name"];
+	$Msg = "Task Returned:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
@@ -77,9 +77,9 @@ if ( isset($_GET["delete"]) ){
 	$employee = selectDB("employee","`id` LIKE '".$taskDetails[0]["to"]."'");
 	$user = selectDB("user","`id` LIKE '".$taskDetails[0]["by"]."'");
 	$project = selectDB("project","`id` LIKE '".$taskDetails[0]["projectId"]."'");
-	$Msg = "Task Deleted: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned By: ".$user[0]["username"];
+	$Msg = "Task Deleted:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($employee[0]["phone"],$Msg);
-	$Msg = "Task Deleted: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$employee[0]["name"];
+	$Msg = "Task Deleted:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
 	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
