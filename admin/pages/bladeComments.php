@@ -3,6 +3,75 @@ if ( isset($_POST["taskId"]) ){
 	$table = "comments";
 	$_POST["date"] = $date;
 	insertDB($table,$_POST);
+	
+	// Get task details
+	$taskDetails = selectDB("task", "`id` LIKE '".$_POST["taskId"]."'");
+	$project = selectDB("project", "`id` LIKE '".$taskDetails[0]["projectId"]."'");
+	
+	// Determine who sent the message
+	$senderID = ($userType == 0) ? $userId : 0;
+	$senderEmpID = ($userType == 1) ? $userId : 0;
+	$senderName = ($userType == 0) ? $username : "";
+	
+	if ($userType == 1) {
+		$empDetails = selectDB("employee", "`id` LIKE '".$userId."'");
+		$senderName = $empDetails[0]["name"];
+	}
+	
+	// Create message with task context
+	$Msg = "New Comment:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nFrom: ".$senderName."\nMessage: ".$_POST["send-msg"];
+	
+	// Arrays to store unique user and employee IDs who have participated in the chat
+	$userPhones = array();
+	$employeePhones = array();
+	
+	// Get the task creator and assignee
+	$taskCreator = selectDB("user", "`id` LIKE '".$taskDetails[0]["by"]."'");
+	$taskAssignee = selectDB("employee", "`id` LIKE '".$taskDetails[0]["to"]."'");
+	
+	// Add them to the notification list if they're not the sender
+	if ($taskCreator[0]["id"] != $senderID && !empty($taskCreator[0]["phone"])) {
+		$userPhones[$taskCreator[0]["id"]] = $taskCreator[0]["phone"];
+	}
+	
+	if ($taskAssignee[0]["id"] != $senderEmpID && !empty($taskAssignee[0]["phone"])) {
+		$employeePhones[$taskAssignee[0]["id"]] = $taskAssignee[0]["phone"];
+	}
+	
+	// Get all users who have participated in this conversation
+	$sql = "SELECT DISTINCT c.userId, c.empId, u.phone as userPhone, e.phone as empPhone
+			FROM `comments` as c
+			LEFT JOIN `user` as u ON c.userId = u.id AND u.id > 0
+			LEFT JOIN `employee` as e ON c.empId = e.id AND e.id > 0
+			WHERE c.taskId LIKE '".$_POST["taskId"]."'";
+	
+	$result = $dbconnect->query($sql);
+	while ($row = $result->fetch_assoc()) {
+		// Add user to notification list if not the sender and has a phone number
+		if ($row["userId"] > 0 && $row["userId"] != $senderID && !empty($row["userPhone"])) {
+			$userPhones[$row["userId"]] = $row["userPhone"];
+		}
+		
+		// Add employee to notification list if not the sender and has a phone number
+		if ($row["empId"] > 0 && $row["empId"] != $senderEmpID && !empty($row["empPhone"])) {
+			$employeePhones[$row["empId"]] = $row["empPhone"];
+		}
+	}
+	
+	// Send WhatsApp messages to all users in the conversation
+	foreach ($userPhones as $phone) {
+		if (!empty($phone)) {
+			whatsappUltraMsg($phone, $Msg);
+		}
+	}
+	
+	// Send WhatsApp messages to all employees in the conversation
+	foreach ($employeePhones as $phone) {
+		if (!empty($phone)) {
+			whatsappUltraMsg($phone, $Msg);
+		}
+	}
+	
 	header("Location: ?p=Comments&id=".$_POST["taskId"]);
 }
 ?>
