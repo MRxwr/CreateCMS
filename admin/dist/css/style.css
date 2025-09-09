@@ -7027,7 +7027,7 @@ ul.inbox-nav li a:hover, ul.inbox-nav li.active a, ul.inbox-nav li a:focus {
       opacity: 1; }
   .slide-nav-toggle .page-wrapper {
     margin-left: 0;
-    left: 225px; }
+    left: 100px; }
   .slide-nav-toggle .navbar.navbar-inverse.navbar-fixed-top .nav-header {
     width: 225px; }
     .slide-nav-toggle .navbar.navbar-inverse.navbar-fixed-top .nav-header .logo-wrap .brand-text {
@@ -7066,7 +7066,7 @@ ul.inbox-nav li a:hover, ul.inbox-nav li.active a, ul.inbox-nav li a:focus {
   .slide-nav-toggle .fixed-sidebar-left {
     margin-left: 0; }
   .slide-nav-toggle .page-wrapper {
-    left: 225px;
+    left: 100px;
     margin-left: 0; }
   .slide-nav-toggle.sidebar-hover .navbar.navbar-inverse.navbar-fixed-top .nav-header {
     width: 100%; }
