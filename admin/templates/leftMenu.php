@@ -8,30 +8,75 @@
 <?php
 if ( $userType == 0 ){
 	$currentPage = isset($_GET['p']) ? $_GET['p'] : 'Home';
-	$menuItems = [
-		['p' => 'Home','icon' => 'zmdi zmdi-landscape','text' => 'Dashboard'],
-		['p' => 'Leads','icon' => 'fa fa-users','text' => 'Leads'],
-		['p' => 'Customers','icon' => 'fa fa-user','text' => 'Customers'],
-		['p' => 'Employees','icon' => 'fa fa-user-md','text' => 'employees'],
-		['p' => 'Users','icon' => 'fa fa-user-plus','text' => 'Users'],
-		['p' => 'Details','icon' => 'fa fa-clock-o','text' => 'History','extra' => '&a=Logs'],
-		['p' => 'Settings','icon' => 'fa fa-gears','text' => 'Settings']
-	];
-	foreach($menuItems as $item){
-		$isActive = ($currentPage == $item['p']) ? 'active' : '';
-		$href = '?p=' . $item['p'];
-		if (isset($item['extra'])) $href .= $item['extra'];
-		?>
+?>
 		<li>
-			<a class="<?php echo $isActive; ?>" href="<?php echo $href; ?>" >
+			<a class="<?php echo ($currentPage == 'Home') ? 'active' : ''; ?>" href="?p=Home" >
 				<div class="pull-left">
-					<i class="<?php echo $item['icon']; ?> mr-20"></i>
-					<span class="right-nav-text"><?php echo $item['text']; ?></span>
+					<i class="zmdi zmdi-landscape mr-20"></i>
+					<span class="right-nav-text">Dashboard</span>
 				</div>
 				<div class="pull-right"></div>
 				<div class="clearfix"></div>
 			</a>
+			
+			<a class="<?php echo ($currentPage == 'Leads') ? 'active' : ''; ?>" href="?p=Leads" >
+				<div class="pull-left">
+					<i class="fa fa-users mr-20"></i>
+					<span class="right-nav-text">Leads</span>
+				</div>
+				<div class="pull-right"></div>
+				<div class="clearfix"></div>
+			</a>
+			
+			<a class="<?php echo ($currentPage == 'Customers') ? 'active' : ''; ?>" href="?p=Customers" >
+				<div class="pull-left">
+					<i class="fa fa-user mr-20"></i>
+					<span class="right-nav-text">Customers</span>
+				</div>
+				<div class="pull-right"></div>
+				<div class="clearfix"></div>
+			</a>
+			
+			<a class="<?php echo ($currentPage == 'Employees') ? 'active' : ''; ?>" href="?p=Employees" >
+				<div class="pull-left">
+					<i class="fa fa-user-md mr-20"></i>
+					<span class="right-nav-text">employees</span>
+				</div>
+				<div class="pull-right"></div>
+				<div class="clearfix"></div>
+			</a>
+			
+			<a class="<?php echo ($currentPage == 'Users') ? 'active' : ''; ?>" href="?p=Users" >
+				<div class="pull-left">
+					<i class="fa fa-user-plus mr-20"></i>
+					<span class="right-nav-text">Users</span>
+				</div>
+				<div class="pull-right"></div>
+				<div class="clearfix"></div>
+			</a>
+			
+			<a class="<?php echo ($currentPage == 'Details') ? 'active' : ''; ?>" href="?p=Details&a=Logs" >
+				<div class="pull-left">
+					<i class="fa fa-clock-o mr-20"></i>
+					<span class="right-nav-text">History</span>
+				</div>
+				<div class="pull-right"></div>
+				<div class="clearfix"></div>
+			</a>
+			
+			<a class="<?php echo ($currentPage == 'Settings') ? 'active' : ''; ?>" href="?p=Settings" >
+				<div class="pull-left">
+					<i class="fa fa-gears mr-20"></i>
+					<span class="right-nav-text">Settings</span>
+				</div>
+				<div class="pull-right"></div>
+				<div class="clearfix"></div>
+			</a>
+			
 		</li>
-		<?php
-	}
+<?php
 }
+?>
+	</ul>
+</div>
+<!-- /Left Sidebar Menu -->
