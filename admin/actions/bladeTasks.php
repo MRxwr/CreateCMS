@@ -33,7 +33,7 @@ if ( isset($_GET["doing"]) ){
 	whatsappUltraMsg($employee[0]["phone"],$Msg);
 	$Msg = "Task Started: \n\n Task: ".$taskDetails[0]["task"]."\n Project: ".$project[0]["title"]."\n Expected Date: ".$taskDetails[0]["expected"]."\n Assigned To: ".$employee[0]["name"]."\n Start Date: ".$date;
 	whatsappUltraMsg($user[0]["phone"],$Msg);
-	//header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
+	header("Location: ?p=Details&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]);
 }
 if ( isset($_GET["done"]) ){
 	$table = "task";

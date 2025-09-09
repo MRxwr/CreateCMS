@@ -245,13 +245,12 @@ function whatsappNoti($order){
 function whatsappUltraMsg($to, $Msg){
 	if( $settings = selectDB("settings","`id` = '1'") ){
 			if( $settings[0]["whatsappStatus"] != 1 ){
-				$data = array();
-				return $data;		
+				$response = array();
 			}else{
 			$data = array(
 				'token' => "{$settings[0]["whatsappToken"]}",
 				'to' => "{$to}",
-				'body' => "{$Msg} \n\nautomated message from Create CMS",
+				'body' => "{$Msg} \n\n automated message from Create CMS",
 			);
 			$curl = curl_init();
 			curl_setopt_array($curl, array(
@@ -271,13 +270,10 @@ function whatsappUltraMsg($to, $Msg){
 			));
 			$response = curl_exec($curl);
 			curl_close($curl);
-			//return $response;
 		}
 	}else{
-		$data = array();
-		//return $data;
+		$response = array();
 	}
-	var_dump($response);die();
 	return $response;
 }
 
