@@ -11,7 +11,7 @@ if ( isset($_POST["userId"]) ){
 		$_POST["file"] = "";
 	}
 	$table = "client";
-	insertDB($table,$_POST);
+	var_dump(insertDB($table,$_POST));//insertDB($table,$_POST);
 	//header("Location: ?p=Leads");
 }
 if ( isset($_GET["delete"]) ){
