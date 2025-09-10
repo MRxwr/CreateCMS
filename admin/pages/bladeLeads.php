@@ -1,5 +1,6 @@
 <?php
 if ( isset($_POST["userId"]) ){
+	var_dump($_POST);
 	if( is_uploaded_file($_FILES['file']['tmp_name']) ){
 		@$ext = end((explode(".", $_FILES['file']['name'])));
 		$directory = "logos/";
