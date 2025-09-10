@@ -5,11 +5,11 @@ function deleteDB($table, $where){
     $check = [';', '"'];
     $where = str_replace($check, "", $where);
     $sql = "DELETE FROM `" . $table . "` WHERE " . $where;
-    if( isset($_GET["v"]) && !empty($_GET["v"]) ){
+    if( isset($_GET["p"]) && !empty($_GET["p"]) ){
         $array = array(
             "userId" => $userID,
             "username" => $empUsername,
-            "module" => $_GET["v"],
+            "module" => $_GET["p"],
             "action" => "Delete",
             "sqlQuery" => json_encode(array("table"=>$table,"where"=>$where)),
         );
@@ -32,11 +32,11 @@ function deleteDB($table, $where){
 function deleteDBNew($table, $params, $where){
     GLOBAL $dbconnect, $userID, $empUsername, $_GET;
     $sql = "DELETE FROM `" . $table . "` WHERE " . $where;
-    if (isset($_GET["v"]) && !empty($_GET["v"])) {
+    if (isset($_GET["p"]) && !empty($_GET["p"])) {
         $array = array(
             "userId" => $userID,
             "username" => $empUsername,
-            "module" => $_GET["v"],
+            "module" => $_GET["p"],
             "action" => "Delete",
             "sqlQuery" => json_encode(array("table" => $table, "where" => $where)),
         );
@@ -209,11 +209,11 @@ function insertDB($table, $data){
     $stmt = $dbconnect->prepare($sql);
     $types = str_repeat('s', count($data));
     $stmt->bind_param($types, ...array_values($data));
-    if( isset($_GET["v"]) && !empty($_GET["v"]) ){
+    if( isset($_GET["p"]) && !empty($_GET["p"]) ){
         $array = array(
             "userId" => $userID,
             "username" => $empUsername,
-            "module" => $_GET["v"],
+            "module" => $_GET["p"],
             "action" => "Insert",
             "sqlQuery" => json_encode(array("table"=>$table,"data"=>$data)),
         );
@@ -248,11 +248,11 @@ function updateDB($table, $data, $where) {
     $values = array_values($data);
     $stmt->bind_param($params, ...$values);
     
-    if( isset($_GET["v"]) && !empty($_GET["v"]) ){
+    if( isset($_GET["p"]) && !empty($_GET["p"]) ){
         $array = array(
             "userId" => $userID,
             "username" => $empUsername,
-            "module" => $_GET["v"],
+            "module" => $_GET["p"],
             "action" => "update",
             "sqlQuery" => json_encode(array("table"=>$table,"data"=>$data,"where"=>$where)),
         );

@@ -10,29 +10,29 @@ if ( isset($_POST["userId"]) ){
 		$_POST["file"] = "";
 	}
 	$table = "client";
-	var_dump(insertDB($table,$_POST));//insertDB($table,$_POST);
-	//header("Location: ?p=Leads");
+	insertDB($table,$_POST);
+	header("Location: ?p=Leads");
 }
 if ( isset($_GET["delete"]) ){
 	$table = "client";
 	$data = array('type'=>'1');
 	$where = "`id` LIKE '".$_GET["delete"]."'";
 	updateDB($table,$data,$where);
-	//header("Location: ?p=Leads");
+	header("Location: ?p=Leads");
 }
 if ( isset($_GET["customer"]) ){
 	$table = "client";
 	$data = array('type'=>'2');
 	$where = "`id` LIKE '".$_GET["customer"]."'";
 	updateDB($table,$data,$where);
-	//header("Location: ?p=Leads");
+	header("Location: ?p=Leads");
 }
 if ( isset($_GET["return"]) ){
 	$table = "client";
 	$data = array('type'=>'0');
 	$where = "`id` LIKE '".$_GET["return"]."'";
 	updateDB($table,$data,$where);
-	//header("Location: ?p=Leads");
+	header("Location: ?p=Leads");
 }
 ?>
 		<div class="row">
