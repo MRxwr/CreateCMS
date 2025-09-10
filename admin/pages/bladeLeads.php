@@ -201,7 +201,7 @@ if ( isset($_GET["return"]) ){
 <?php
 if ( isset($image) || isset($_GET["customer"]) || isset($_GET["delete"]) || isset($_GET["return"]) ){
 	?>
-	window.location.replace("?page=Leads");
+	window.location.replace("?p=Leads");
 	<?php
 }
 ?>
