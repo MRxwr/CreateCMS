@@ -2,10 +2,10 @@
 if ( isset($_POST["userId"]) ){
 	if( is_uploaded_file($_FILES['file']['tmp_name']) ){
 		@$ext = end((explode(".", $_FILES['file']['name'])));
-		$directory = "files/";
+		$directory = "logos/";
 		$originalfile = $directory . md5(date("d-m-y").time().rand(111111,999999))."." . $ext;
 		move_uploaded_file($_FILES["file"]["tmp_name"], $originalfile);
-		$_POST["file"] = str_replace("files/",'',$originalfile);
+		$_POST["file"] = str_replace("logos/",'',$originalfile);
 	}else{
 		$_POST["file"] = "";
 	}
