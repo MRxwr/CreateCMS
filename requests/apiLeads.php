@@ -1,4 +1,12 @@
 <?php
+// Prevent any output before JSON response
+ob_start();
+
+// Error handling - convert all errors to exceptions
+set_error_handler(function($severity, $message, $file, $line) {
+    throw new ErrorException($message, 0, $severity, $file, $line);
+});
+
 header('Content-Type: application/json');
 require_once('../admin/includes/config.php');
 require_once('../admin/includes/functions.php');
@@ -10,6 +18,16 @@ if (!checkAuthentication()) {
     echo json_encode(['ok' => false, 'data' => 'Authentication required']);
     exit;
 }
+
+// Get current user info
+$currentUser = getCurrentUser();
+if (!$currentUser) {
+    http_response_code(401);
+    echo json_encode(['ok' => false, 'data' => 'User session invalid']);
+    exit;
+}
+
+$userId = $currentUser['id'];
 
 $method = $_SERVER['REQUEST_METHOD'];
 $response = ['ok' => false, 'data' => null];
@@ -204,7 +222,13 @@ try {
     $response['ok'] = false;
     $response['data'] = $e->getMessage();
     http_response_code(400);
+} catch(Error $e) {
+    $response['ok'] = false;
+    $response['data'] = 'Server error: ' . $e->getMessage();
+    http_response_code(500);
 }
 
+// Clear any unwanted output and send JSON
+ob_clean();
 echo json_encode($response);
 ?>

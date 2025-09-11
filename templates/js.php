@@ -57,6 +57,22 @@ async function makeRequest(url, options = {}) {
     
     try {
         const response = await fetch(url, config);
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            // Get the actual response text for debugging
+            const text = await response.text();
+            console.error('Non-JSON response received:', text);
+            
+            // Check if it's a login page redirect
+            if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+                throw new Error('Session expired. Please log in again.');
+            }
+            
+            throw new Error('Server returned invalid response. Please try again.');
+        }
+        
         const data = await response.json();
         
         hideLoading();
@@ -68,6 +84,7 @@ async function makeRequest(url, options = {}) {
         return data;
     } catch (error) {
         hideLoading();
+        console.error('Request error:', error);
         showToast(error.message, 'danger');
         throw error;
     }
