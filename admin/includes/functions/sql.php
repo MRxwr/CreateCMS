@@ -7,8 +7,8 @@ function deleteDB($table, $where){
     $sql = "DELETE FROM `" . $table . "` WHERE " . $where;
     if( isset($_GET["p"]) && !empty($_GET["p"]) ){
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
+            "userId" => isset($userID) ? $userID : 0,
+            "username" => isset($empUsername) ? $empUsername : 0,
             "module" => $_GET["p"],
             "action" => "Delete",
             "sqlQuery" => json_encode(array("table"=>$table,"where"=>$where)),
@@ -34,8 +34,8 @@ function deleteDBNew($table, $params, $where){
     $sql = "DELETE FROM `" . $table . "` WHERE " . $where;
     if (isset($_GET["p"]) && !empty($_GET["p"])) {
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
+            "userId" => isset($userID) ? $userID : 0,
+            "username" => isset($empUsername) ? $empUsername : 0,
             "module" => $_GET["p"],
             "action" => "Delete",
             "sqlQuery" => json_encode(array("table" => $table, "where" => $where)),
@@ -228,8 +228,8 @@ function selectJoinDBNew($table, $joinData, $where, $placeholders = [], $order =
     // Log the query if module is set
     if(isset($_GET["p"]) && !empty($_GET["p"])){
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
+            "userId" => isset($userID) ? $userID : 0,
+            "username" => isset($empUsername) ? $empUsername : 0,
             "module" => $_GET["p"],
             "action" => "Select",
             "sqlQuery" => json_encode(array(
@@ -287,8 +287,8 @@ function insertDB($table, $data){
     $stmt->bind_param($types, ...array_values($data));
     if( isset($_GET["p"]) && !empty($_GET["p"]) ){
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
+            "userId" => isset($userID) ? $userID : 0,
+            "username" => isset($empUsername) ? $empUsername : 0,
             "module" => $_GET["p"],
             "action" => "Insert",
             "sqlQuery" => json_encode(array("table"=>$table,"data"=>$data)),
@@ -326,8 +326,8 @@ function updateDB($table, $data, $where) {
     
     if( isset($_GET["p"]) && !empty($_GET["p"]) ){
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
+            "userId" => isset($userID) ? $userID : 0,
+            "username" => isset($empUsername) ? $empUsername : 0,
             "module" => $_GET["p"],
             "action" => "update",
             "sqlQuery" => json_encode(array("table"=>$table,"data"=>$data,"where"=>$where)),
