@@ -369,12 +369,23 @@ body {
 /* Chat button styling */
 .chat-icon {
     transition: all 0.2s ease;
+    background: linear-gradient(135deg, #0d6efd, #0056b3) !important;
+    border: none !important;
+    color: white !important;
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);
+    font-size: 14px !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .chat-icon:hover {
     transform: scale(1.1);
-    background-color: var(--primary-color) !important;
-    border-color: var(--primary-color) !important;
+    background: linear-gradient(135deg, #0056b3, #004085) !important;
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.4);
     color: white !important;
 }
 </style>

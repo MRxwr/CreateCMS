@@ -685,10 +685,10 @@ function addChatIconsToTasks() {
         const cardBody = card.querySelector('.card-body');
         if (cardBody && !card.querySelector('.chat-icon')) {
             const chatIcon = document.createElement('button');
-            chatIcon.className = 'btn btn-sm btn-outline-primary chat-icon position-absolute';
-            chatIcon.style.cssText = 'top: 5px; right: 5px; z-index: 10;';
-            chatIcon.innerHTML = '<i class="bi bi-chat"></i>';
-            chatIcon.title = 'Open Chat';
+            chatIcon.className = 'btn chat-icon position-absolute';
+            chatIcon.style.cssText = 'top: 8px; right: 8px; z-index: 10;';
+            chatIcon.innerHTML = '<i class="bi bi-chat-fill"></i>';
+            chatIcon.title = 'Open Task Chat';
             cardBody.style.position = 'relative';
             cardBody.appendChild(chatIcon);
         }
