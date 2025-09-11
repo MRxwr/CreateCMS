@@ -72,7 +72,7 @@ if ( isset($_POST["taskId"]) ){
 		}
 	}
 	
-	header("Location: ?p=Comments&id=".$_POST["taskId"]);
+	header("Location: ?p=Comments&id=".$_POST["taskId"]);die();
 }
 ?>
 <form method="post" action="">
