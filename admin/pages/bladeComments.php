@@ -4,17 +4,9 @@ if ( isset($_POST["taskId"]) ){
 	$_POST["date"] = $date;
 	insertDB($table,$_POST);
 	
-	// Get task details using secure selectDBNew
-	$where = "id = ?";
-	$placeholders = array($_POST["taskId"]);
-	$taskDetails = selectDBNew("task", $placeholders, $where, "");
-	
-	// Get project details using secure selectDBNew
-	if($taskDetails && count($taskDetails) > 0) {
-		$where = "id = ?";
-		$placeholders = array($taskDetails[0]["projectId"]);
-		$project = selectDBNew("project", $placeholders, $where, "");
-	}
+	// Get task details
+	$taskDetails = selectDB("task", "`id` LIKE '".$_POST["taskId"]."'");
+	$project = selectDB("project", "`id` LIKE '".$taskDetails[0]["projectId"]."'");
 	
 	// Determine who sent the message
 	$senderID = ($userType == 0) ? $userId : 0;
@@ -22,12 +14,8 @@ if ( isset($_POST["taskId"]) ){
 	$senderName = ($userType == 0) ? $username : "";
 	
 	if ($userType == 1) {
-		$where = "id = ?";
-		$placeholders = array($userId);
-		$empDetails = selectDBNew("employee", $placeholders, $where, "");
-		if($empDetails && count($empDetails) > 0) {
-			$senderName = $empDetails[0]["name"];
-		}
+		$empDetails = selectDB("employee", "`id` LIKE '".$userId."'");
+		$senderName = $empDetails[0]["name"];
 	}
 	
 	// Create message with task context
@@ -37,16 +25,9 @@ if ( isset($_POST["taskId"]) ){
 	$userPhones = array();
 	$employeePhones = array();
 	
-	// Get the task creator and assignee using secure selectDBNew
-	if($taskDetails && count($taskDetails) > 0) {
-		$where = "id = ?";
-		$placeholders = array($taskDetails[0]["by"]);
-		$taskCreator = selectDBNew("user", $placeholders, $where, "");
-		
-		$where = "id = ?";
-		$placeholders = array($taskDetails[0]["to"]);
-		$taskAssignee = selectDBNew("employee", $placeholders, $where, "");
-	}
+	// Get the task creator and assignee
+	$taskCreator = selectDB("user", "`id` LIKE '".$taskDetails[0]["by"]."'");
+	$taskAssignee = selectDB("employee", "`id` LIKE '".$taskDetails[0]["to"]."'");
 	
 	// Add them to the notification list if they're not the sender
 	if ($taskCreator[0]["id"] != $senderID && !empty($taskCreator[0]["phone"])) {
@@ -57,18 +38,15 @@ if ( isset($_POST["taskId"]) ){
 		$employeePhones[$taskAssignee[0]["id"]] = $taskAssignee[0]["phone"];
 	}
 	
-	// Get all users who have participated in this conversation using secure prepared statements
-	$joinData = array(
-		"select" => array("DISTINCT t.userId", "t.empId", "t1.phone as userPhone", "t2.phone as empPhone"),
-		"join" => array("user", "employee"),
-		"on" => array("t.userId = t1.id AND t1.id > 0", "t.empId = t2.id AND t2.id > 0")
-	);
-	$where = "t.taskId = ?";
-	$placeholders = array($_POST["taskId"]);
+	// Get all users who have participated in this conversation
+	$sql = "SELECT DISTINCT c.userId, c.empId, u.phone as userPhone, e.phone as empPhone
+			FROM `comments` as c
+			LEFT JOIN `user` as u ON c.userId = u.id AND u.id > 0
+			LEFT JOIN `employee` as e ON c.empId = e.id AND e.id > 0
+			WHERE c.taskId LIKE '".$_POST["taskId"]."'";
 	
-	$participants = selectJoinDBNew("comments", $joinData, $where, $placeholders);
-	if($participants){
-		foreach($participants as $row) {
+	$result = $dbconnect->query($sql);
+	while ($row = $result->fetch_assoc()) {
 		// Add user to notification list if not the sender and has a phone number
 		if ($row["userId"] > 0 && $row["userId"] != $senderID && !empty($row["userPhone"])) {
 			$userPhones[$row["userId"]] = $row["userPhone"];
@@ -77,7 +55,6 @@ if ( isset($_POST["taskId"]) ){
 		// Add employee to notification list if not the sender and has a phone number
 		if ($row["empId"] > 0 && $row["empId"] != $senderEmpID && !empty($row["empPhone"])) {
 			$employeePhones[$row["empId"]] = $row["empPhone"];
-		}
 		}
 	}
 	
@@ -109,13 +86,14 @@ if ( isset($_POST["taskId"]) ){
 	<div class="panel-heading ma-0 pt-15">
 		<div class="goto-back txt-dark" style="font-weight:700">	
 			<?php
-			// Use selectDBNew for secure task retrieval
-			$where = "id = ?";
-			$placeholders = array($_GET["id"]);
-			$taskResult = selectDBNew("task", $placeholders, $where, "");
-			if($taskResult && count($taskResult) > 0){
-				echo $taskResult[0]["task"];
-			}
+			$sql = "SELECT *
+					FROM `task`
+					WHERE
+					`id` LIKE '".$_GET["id"]."'
+					";
+			$result = $dbconnect->query($sql);
+			$row = $result->fetch_assoc();
+			echo $row["task"];
 			?>
 			<div class="clearfix"></div>
 		</div>
@@ -127,19 +105,18 @@ if ( isset($_POST["taskId"]) ){
 				
 				<ul class="chatapp-chat-nicescroll-bar pt-20" style="overflow: hidden; width: auto; height: 483px;">
 				<?php
-				// Use selectJoinDBNew for secure comments retrieval
-				$joinData = array(
-					"select" => array("t.*", "t1.username as User", "t2.username as EmpUser"),
-					"join" => array("user", "employee"),
-					"on" => array("t.userId = t1.id", "t.empId = t2.id")
-				);
-				$where = "t.taskId = ?";
-				$placeholders = array($_GET["id"]);
-				$order = "t.id ASC";
-				
-				$comments = selectJoinDBNew("comments", $joinData, $where, $placeholders, $order);
-				if($comments){
-					foreach($comments as $row){
+				$sql = "SELECT c.*, u.username as User, e.username as EmpUser
+						FROM `comments` as c
+						LEFT JOIN `user` as u
+						ON c.userId = u.id
+						LEFT JOIN `employee` as e
+						ON c.empId = e.id
+						WHERE
+						c.taskId LIKE '".$_GET["id"]."'
+						ORDER BY c.id ASC
+						";
+				$result = $dbconnect->query($sql);
+				while ( $row = $result->fetch_assoc() ){
 					if ( $userId != $row["userId"] && $userId != $row["empId"] ){
 				?>
 					<li class="friend">
@@ -168,7 +145,6 @@ if ( isset($_POST["taskId"]) ){
 						</div>	
 					</li>
 				<?php
-					}
 					}
 				}
 				?>
