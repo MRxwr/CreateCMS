@@ -28,4 +28,4 @@ if (!session_id()) {
 // Define base paths
 define('BASE_PATH', realpath(dirname(__FILE__) . '/../../') . '/');
 define('ADMIN_PATH', realpath(dirname(__FILE__) . '/../') . '/');
-?>
+?> 
