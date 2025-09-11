@@ -54,6 +54,7 @@
                             <i class="bi bi-house-door"></i> Home
                         </a>
                     </li>
+                    <?php if ($currentUser['type'] == 0): // Users only ?>
                     <li class="nav-item">
                         <a class="nav-link <?php echo (isset($_GET['v']) && $_GET['v'] == 'Leads') ? 'active' : ''; ?>" href="?v=Leads">
                             <i class="bi bi-person-plus"></i> Clients
@@ -65,13 +66,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo (isset($_GET['v']) && $_GET['v'] == 'Tasks') ? 'active' : ''; ?>" href="?v=Tasks">
-                            <i class="bi bi-check-square"></i> Tasks
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link <?php echo (isset($_GET['v']) && $_GET['v'] == 'Employees') ? 'active' : ''; ?>" href="?v=Employees">
                             <i class="bi bi-people"></i> Employees
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo (isset($_GET['v']) && $_GET['v'] == 'Tasks') ? 'active' : ''; ?>" href="?v=Tasks">
+                            <i class="bi bi-check-square"></i> Tasks
                         </a>
                     </li>
                 </ul>

@@ -1,4 +1,7 @@
 <?php
+// Get current user
+$currentUser = getCurrentUser();
+
 // Helper functions for your database status system
 function getStatusLabel($status) {
     switch((int)$status) {
@@ -19,29 +22,51 @@ function getStatusClass($status) {
 }
 
 // Get dashboard statistics using your live database structure
-$totalClients = getTotals("client", "1=1");
-$totalProjects = getTotals("project", "1=1"); 
+if ($currentUser['type'] == 0) { // Users see all stats
+    $totalClients = getTotals("client", "1=1");
+    $totalProjects = getTotals("project", "1=1"); 
+    $totalEmployees = getTotals("employee", "status = 0"); // status 0 = active
+}
+
+// Get tasks stats (both users and employees)
 $totalTasks = getTotals("task", "status != 2"); // status 2 = deleted
-$totalEmployees = getTotals("employee", "status = 0"); // status 0 = active
+
+// For employees, only show their assigned tasks
+if ($currentUser['type'] == 1) { // Employee
+    $myTasks = getTotals("task", "status != 2 AND `to` = " . (int)$currentUser['id']);
+    $myPendingTasks = getTotals("task", "status = 0 AND `to` = " . (int)$currentUser['id']);
+    $myInProgressTasks = getTotals("task", "status = 1 AND `to` = " . (int)$currentUser['id']);
+    $myCompletedTasks = getTotals("task", "status = 2 AND `to` = " . (int)$currentUser['id']);
+}
 
 // Get recent tasks using direct query since selectDB doesn't support JOINs with 3 parameters
 $recentTasks = [];
-$query = "SELECT t.*, p.title as project_title, e.name as employee_name 
+$taskQuery = "SELECT t.*, p.title as project_title, e.name as employee_name 
           FROM task t 
-          LEFT JOIN project p ON t.projectId = p.id 
-          LEFT JOIN employee e ON t.to = e.id 
+          LEFT JOIN project p ON t.projectId = p.id";
+
+// If employee, only show their tasks
+if ($currentUser['type'] == 1) {
+    $taskQuery .= " LEFT JOIN employee e ON t.to = e.id 
+          WHERE t.status != 2 AND t.to = " . (int)$currentUser['id'] . "
+          ORDER BY t.id DESC LIMIT 5";
+} else {
+    $taskQuery .= " LEFT JOIN employee e ON t.to = e.id 
           WHERE t.status != 2 
-          ORDER BY t.id DESC 
-          LIMIT 5";
-$result = $dbconnect->query($query);
+          ORDER BY t.id DESC LIMIT 5";
+}
+
+$result = $dbconnect->query($taskQuery);
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $recentTasks[] = $row;
     }
 }
 
-// Get project progress
-$projectProgress = selectDB("project", "1=1 ORDER BY id DESC LIMIT 5");
+// Get project progress (only for users)
+if ($currentUser['type'] == 0) {
+    $projectProgress = selectDB("project", "1=1 ORDER BY id DESC LIMIT 5");
+}
 ?>
 
 <div class="container-fluid">
@@ -49,12 +74,19 @@ $projectProgress = selectDB("project", "1=1 ORDER BY id DESC LIMIT 5");
     <div class="row mb-4">
         <div class="col-12">
             <h1 class="display-6 text-primary">Dashboard</h1>
-            <p class="text-muted">Welcome back, <?php echo $username; ?>! Here's what's happening with your projects.</p>
+            <p class="text-muted">Welcome back, <?php echo $currentUser['name'] ?? $currentUser['username']; ?>! 
+                <?php if ($currentUser['type'] == 1): ?>
+                    Here are your assigned tasks.
+                <?php else: ?>
+                    Here's what's happening with your projects.
+                <?php endif; ?>
+            </p>
         </div>
     </div>
 
     <!-- Statistics Cards -->
     <div class="row mb-4">
+        <?php if ($currentUser['type'] == 0): // Users see all stats ?>
         <div class="col-lg-3 col-md-6 mb-4">
             <div class="card stats-card h-100">
                 <div class="card-body text-center">
@@ -91,6 +123,44 @@ $projectProgress = selectDB("project", "1=1 ORDER BY id DESC LIMIT 5");
                 </div>
             </div>
         </div>
+        <?php else: // Employees see task stats ?>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card stats-card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-list-task display-4 mb-3"></i>
+                    <div class="stats-number"><?php echo $myTasks ?: 0; ?></div>
+                    <div class="stats-label">My Tasks</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card stats-card h-100" style="background: linear-gradient(135deg, #ffc107, #b08800);">
+                <div class="card-body text-center">
+                    <i class="bi bi-clock display-4 mb-3"></i>
+                    <div class="stats-number"><?php echo $myPendingTasks ?: 0; ?></div>
+                    <div class="stats-label">Pending</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card stats-card h-100" style="background: linear-gradient(135deg, #0dcaf0, #087990);">
+                <div class="card-body text-center">
+                    <i class="bi bi-arrow-clockwise display-4 mb-3"></i>
+                    <div class="stats-number"><?php echo $myInProgressTasks ?: 0; ?></div>
+                    <div class="stats-label">In Progress</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card stats-card h-100" style="background: linear-gradient(135deg, #198754, #0f5132);">
+                <div class="card-body text-center">
+                    <i class="bi bi-check-circle display-4 mb-3"></i>
+                    <div class="stats-number"><?php echo $myCompletedTasks ?: 0; ?></div>
+                    <div class="stats-label">Completed</div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 
     <!-- Recent Activity -->
@@ -100,7 +170,8 @@ $projectProgress = selectDB("project", "1=1 ORDER BY id DESC LIMIT 5");
             <div class="card h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">
-                        <i class="bi bi-clock-history"></i> Recent Tasks
+                        <i class="bi bi-clock-history"></i> 
+                        <?php echo $currentUser['type'] == 1 ? 'My Recent Tasks' : 'Recent Tasks'; ?>
                     </h5>
                     <a href="?v=Tasks" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
@@ -191,8 +262,8 @@ $projectProgress = selectDB("project", "1=1 ORDER BY id DESC LIMIT 5");
         </div>
     </div>
 
-    <!-- Recent Projects Progress -->
-    <?php if($projectProgress && is_array($projectProgress)): ?>
+    <!-- Recent Projects Progress (Users Only) -->
+    <?php if($currentUser['type'] == 0 && $projectProgress && is_array($projectProgress)): ?>
     <div class="row mt-4">
         <div class="col-12">
             <div class="card">

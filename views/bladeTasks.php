@@ -1,6 +1,15 @@
 <?php
+// Get current user
+$currentUser = getCurrentUser();
+
 // Get tasks with project and employee information using your live database structure
 $whereClause = "t.status != 2"; // status 2 = deleted in your numeric system
+
+// If user is an employee, only show tasks assigned to them
+if ($currentUser['type'] == 1) { // Employee
+    $whereClause .= " AND t.to = " . (int)$currentUser['id'];
+}
+
 if(isset($_GET['project']) && !empty($_GET['project'])) {
     $projectId = (int)$_GET['project'];
     $whereClause .= " AND t.projectId = {$projectId}";
@@ -53,17 +62,24 @@ function getTaskStatusClass($status) {
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h1 class="display-6 text-primary">Tasks Management</h1>
-                    <p class="text-muted">Track and manage project tasks efficiently</p>
+                    <h1 class="display-6 text-primary">
+                        <?php echo $currentUser['type'] == 1 ? 'My Tasks' : 'Tasks Management'; ?>
+                    </h1>
+                    <p class="text-muted">
+                        <?php echo $currentUser['type'] == 1 ? 'View and update your assigned tasks' : 'Track and manage project tasks efficiently'; ?>
+                    </p>
                 </div>
+                <?php if ($currentUser['type'] == 0): // Only users can add tasks ?>
                 <button class="btn btn-info btn-lg" onclick="showAddModal('task')">
                     <i class="bi bi-plus-circle"></i> Add Task
                 </button>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
     <!-- Filters and Stats -->
+    <?php if ($currentUser['type'] == 0): // Only show filters for users ?>
     <div class="row mb-4">
         <div class="col-lg-8">
             <div class="card">
@@ -139,6 +155,7 @@ function getTaskStatusClass($status) {
             </div>
         </div>
     </div>
+    <?php endif; // End filters for users only ?>
 
     <!-- Tasks Board View -->
     <div class="row mb-4">
@@ -348,12 +365,14 @@ function getTaskStatusClass($status) {
                                                 <button class="btn btn-sm btn-outline-primary" onclick="openTaskChat(<?php echo $task['id']; ?>)">
                                                     <i class="bi bi-chat"></i>
                                                 </button>
+                                                <?php if ($currentUser['type'] == 0): // Only users can edit/delete ?>
                                                 <button class="btn btn-sm btn-outline-secondary" onclick="editTask(<?php echo $task['id']; ?>)">
                                                     <i class="bi bi-pencil"></i>
                                                 </button>
                                                 <button class="btn btn-sm btn-outline-danger" onclick="deleteItem('task', <?php echo $task['id']; ?>, '<?php echo addslashes($task['task']); ?>')">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
+                                                <?php endif; ?>
                                             </div>
                                         </td>
                                     </tr>
@@ -379,7 +398,8 @@ function getTaskStatusClass($status) {
 
 <!-- Task Card Template (used in Kanban board) -->
 <?php
-function renderTaskCard($task) {
+function renderTaskCard($task, $currentUser) {
+    global $currentUser; // Ensure we have access to current user
     $priorityColor = $task['priority'] == 'high' ? 'danger' : ($task['priority'] == 'medium' ? 'warning' : 'info');
     $isOverdue = $task['expected'] && strtotime($task['expected']) < time() && $task['status'] != 'FINISHED';
     
@@ -419,12 +439,14 @@ function renderTaskCard($task) {
     echo '<i class="bi bi-chat"></i>';
     echo '</button>';
     echo '<div>';
-    echo '<button class="btn btn-sm btn-outline-secondary me-1" onclick="editTask(' . $task['id'] . ')">';
-    echo '<i class="bi bi-pencil"></i>';
-    echo '</button>';
-    echo '<button class="btn btn-sm btn-outline-danger" onclick="deleteItem(\'task\', ' . $task['id'] . ', \'' . addslashes($task['task']) . '\')">';
-    echo '<i class="bi bi-trash"></i>';
-    echo '</button>';
+    if ($currentUser['type'] == 0) { // Only users can edit/delete
+        echo '<button class="btn btn-sm btn-outline-secondary me-1" onclick="editTask(' . $task['id'] . ')">';
+        echo '<i class="bi bi-pencil"></i>';
+        echo '</button>';
+        echo '<button class="btn btn-sm btn-outline-danger" onclick="deleteItem(\'task\', ' . $task['id'] . ', \'' . addslashes($task['task']) . '\')">';
+        echo '<i class="bi bi-trash"></i>';
+        echo '</button>';
+    }
     echo '</div>';
     echo '</div>';
     

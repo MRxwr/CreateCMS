@@ -6,6 +6,21 @@ require_once('includes/auth.php');
 // Require authentication for all pages
 requireAuth();
 
+// Get current user info
+$currentUser = getCurrentUser();
+
+// Define allowed pages for employees
+$employeeAllowedPages = ['Home', 'Tasks', 'ChatTask'];
+
+// Check if employee is trying to access restricted pages
+if ($currentUser['type'] == 1) { // Employee
+    if (isset($_GET['v']) && !in_array($_GET['v'], $employeeAllowedPages)) {
+        // Redirect employees to Tasks page if they try to access restricted areas
+        header("Location: ?v=Tasks");
+        exit;
+    }
+}
+
 // Handle chat form submission
 if (isset($_POST["taskId"]) && isset($_POST["send-msg"])) {
     $table = "comments";
