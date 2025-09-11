@@ -1,8 +1,6 @@
 <?php
-session_start();
-require_once('admin/includes/config.php');
-require_once('admin/includes/functions.php');
-require_once('admin/includes/checkLogin.php');
+// Note: Authentication is handled in index.php before including this file
+// Global variables available: $userId, $userType, $username, $currentUser
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -81,12 +79,29 @@ require_once('admin/includes/checkLogin.php');
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> <?php echo $username; ?>
+                            <i class="bi bi-person-circle"></i> 
+                            <?php echo htmlspecialchars($currentUser['name'] ?? $currentUser['username']); ?>
+                            <small class="text-light opacity-75">
+                                (<?php echo $currentUser['type'] == 0 ? 'User' : 'Employee'; ?>)
+                            </small>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="bi bi-person"></i> Profile</a></li>
+                            <li class="dropdown-header">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle bg-secondary text-white me-2" style="width: 30px; height: 30px; font-size: 12px;">
+                                        <?php echo strtoupper(substr($currentUser['name'] ?? $currentUser['username'], 0, 2)); ?>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold"><?php echo htmlspecialchars($currentUser['name'] ?? 'User'); ?></div>
+                                        <small class="text-muted">@<?php echo htmlspecialchars($currentUser['username']); ?></small>
+                                    </div>
+                                </div>
+                            </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="admin/logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="bi bi-person"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showSettings()"><i class="bi bi-gear"></i> Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                         </ul>
                     </li>
                 </ul>

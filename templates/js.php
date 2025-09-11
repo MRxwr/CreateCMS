@@ -1,6 +1,11 @@
 <script>
 // Global variables
-let currentUser = <?php echo json_encode(['id' => $userId, 'username' => $username, 'type' => $userType]); ?>;
+let currentUser = <?php echo json_encode([
+    'id' => $userId, 
+    'username' => $username, 
+    'type' => $userType,
+    'name' => $currentUser['name'] ?? $username
+]); ?>;
 let csrfToken = '<?php echo md5(session_id() . time()); ?>';
 
 // Utility functions
@@ -26,6 +31,15 @@ function showToast(message, type = 'success') {
     // Show toast
     const bsToast = new bootstrap.Toast(toast);
     bsToast.show();
+}
+
+// Profile and Settings functions
+function showProfile() {
+    window.location.href = '?v=Profile';
+}
+
+function showSettings() {
+    showToast('Settings page coming soon!', 'info');
 }
 
 // AJAX Helper Functions
