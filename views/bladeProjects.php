@@ -25,15 +25,16 @@ $projects = selectDB("project", "status != 2 ORDER BY id DESC"); // status 2 = d
             <?php foreach($projects as $project): ?>
             <?php
             // Get project statistics using correct table names and status
-            $totalTasks = getTotals("task", "projectId = {$project['id']} AND status != 2"); // not deleted
+            // Get ALL tasks for this project (including completed ones)
+            $totalTasks = getTotals("task", "projectId = {$project['id']}"); // all tasks
             $completedTasks = getTotals("task", "projectId = {$project['id']} AND status = 2"); // completed
             $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
             
-            // Get team members using direct query
+            // Get team members using direct query (exclude completed/deleted tasks for active team)
             $teamMembers = [];
             $query = "SELECT DISTINCT e.name FROM task t 
                       JOIN employee e ON t.to = e.id 
-                      WHERE t.projectId = {$project['id']} AND t.status != 2";
+                      WHERE t.projectId = {$project['id']} AND t.status IN (0,1)"; // pending or in progress
             $result = $dbconnect->query($query);
             if ($result && $result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {

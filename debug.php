@@ -86,6 +86,50 @@ if (function_exists('selectDB')) {
     echo "<p style='color: red;'>selectDB function not found</p>";
 }
 
+echo "<br><br><h3>Task Status Analysis:</h3>";
+$statusQuery = "SELECT status, COUNT(*) as count FROM task GROUP BY status ORDER BY status";
+$result = $dbconnect->query($statusQuery);
+if ($result && $result->num_rows > 0) {
+    echo "<table border='1' cellpadding='5'>";
+    echo "<tr><th>Status</th><th>Count</th><th>Meaning</th></tr>";
+    while ($row = $result->fetch_assoc()) {
+        $meaning = '';
+        switch($row['status']) {
+            case 0: $meaning = 'Pending'; break;
+            case 1: $meaning = 'In Progress'; break;
+            case 2: $meaning = 'Completed/Finished'; break;
+            case 3: $meaning = 'On Hold/Returned'; break;
+            default: $meaning = 'Unknown'; break;
+        }
+        echo "<tr><td>{$row['status']}</td><td>{$row['count']}</td><td>{$meaning}</td></tr>";
+    }
+    echo "</table>";
+} else {
+    echo "No task status data found";
+}
+
+// Test specific project progress calculation
+echo "<br><br><h3>Project Progress Test:</h3>";
+$projects = selectDB("project", "1=1 LIMIT 3");
+if ($projects && is_array($projects)) {
+    echo "<table border='1' cellpadding='5'>";
+    echo "<tr><th>Project</th><th>Total Tasks</th><th>Completed Tasks</th><th>Progress</th></tr>";
+    foreach ($projects as $project) {
+        $totalTasks = getTotals("task", "projectId = {$project['id']}");
+        $completedTasks = getTotals("task", "projectId = {$project['id']} AND status = 2");
+        $activeTasks = getTotals("task", "projectId = {$project['id']} AND status IN (0,1)");
+        $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
+        echo "<tr>";
+        echo "<td>{$project['title']}</td>";
+        echo "<td>{$totalTasks}</td>";
+        echo "<td>{$completedTasks}</td>";
+        echo "<td>{$progress}%</td>";
+        echo "</tr>";
+        echo "<tr><td colspan='4'>Active tasks: {$activeTasks}</td></tr>";
+    }
+    echo "</table>";
+}
+
 echo "<br><br><h3>Testing API Dashboard:</h3>";
 echo "<a href='requests/apiDashboard.php' target='_blank'>Test API Dashboard (opens in new tab)</a><br><br>";
 
