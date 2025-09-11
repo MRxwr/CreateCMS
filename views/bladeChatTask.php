@@ -421,15 +421,6 @@ async function sendMessage(event, taskId) {
         document.getElementById('adminForm').submit();
     }
 }
-        
-        // Set the hidden form values
-        document.getElementById('hiddenMessage').value = message;
-        
-        // Submit the admin form
-        document.getElementById('adminForm').style.display = 'block';
-        document.getElementById('adminForm').submit();
-    }
-}
 
 // Update task status
 async function updateTaskStatus(taskId, newStatus) {
