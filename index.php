@@ -6,7 +6,41 @@ require_once('includes/auth.php');
 // Require authentication for all pages
 requireAuth();
 
+// Handle chat form submission
+if (isset($_POST["taskId"]) && isset($_POST["send-msg"])) {
+    $table = "comments";
+    
+    // Clean the data
+    $commentData = [
+        'date' => date('Y-m-d H:i:s'),
+        'userId' => (int)$_POST["userId"],
+        'empId' => (int)$_POST["empId"],
+        'taskId' => (int)$_POST["taskId"],
+        'send-msg' => trim($_POST["send-msg"]),
+        'type' => (int)$_POST["type"],
+        'status' => 1
+    ];
+    
+    $result = insertDB($table, $commentData);
+    
+    if ($result) {
+        // Redirect to avoid resubmission on refresh
+        header("Location: ?v=ChatTask&task=".$_POST["taskId"]);
+        exit;
+    } else {
+        $error_message = "Failed to send message. Please try again.";
+    }
+}
+
 require_once('templates/header.php');
+
+// Show error message if any
+if (isset($error_message)) {
+    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            '.$error_message.'
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+}
 
 // Show welcome message for new users
 if (isset($_GET['welcome']) && $_GET['welcome'] == '1') {

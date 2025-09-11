@@ -1,29 +1,4 @@
 <?php
-// Handle form submission like admin bladeComments.php
-if (isset($_POST["taskId"])) {
-    $table = "comments";
-    $_POST["date"] = date('Y-m-d H:i:s');
-    
-    // Clean the data like admin approach
-    $commentData = [
-        'date' => $_POST["date"],
-        'userId' => $_POST["userId"],
-        'empId' => $_POST["empId"],
-        'taskId' => $_POST["taskId"],
-        'send-msg' => $_POST["send-msg"],
-        'type' => $_POST["type"],
-        'status' => 1
-    ];
-    
-    $result = insertDB($table, $commentData);
-    
-    if ($result) {
-        // Redirect to reload the page
-        header("Location: ?v=ChatTask&task=".$_POST["taskId"]);
-        exit;
-    }
-}
-
 // This is the dedicated chat page for a specific task
 if(!isset($_GET['task']) || empty($_GET['task'])) {
     echo '<div class="alert alert-warning">Please select a task to view chat.</div>';
