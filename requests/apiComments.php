@@ -52,6 +52,10 @@ try {
         case 'POST':
             $input = json_decode(file_get_contents('php://input'), true);
             
+            // Add debugging
+            error_log('API Comments POST - Input: ' . json_encode($input));
+            error_log('API Comments POST - User ID: ' . $userId . ', User Type: ' . $userType);
+            
             if(!$input) {
                 throw new Exception('Invalid JSON data');
             }
@@ -107,6 +111,10 @@ try {
             ];
             
             $result = insertDB("comments", $commentData);
+            
+            // Add debugging
+            error_log('API Comments POST - Comment Data: ' . json_encode($commentData));
+            error_log('API Comments POST - Insert Result: ' . ($result ? 'SUCCESS' : 'FAILED'));
             
             if($result) {
                 $response['ok'] = true;

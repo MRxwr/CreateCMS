@@ -279,19 +279,14 @@ if ($result && $result->num_rows > 0) {
                 
                 <!-- Message Input -->
                 <div class="card-footer">
-                    <!-- Form method like admin (fallback) -->
-                    <form method="post" action="" style="display: none;" id="adminForm">
-                        <input type="hidden" name="taskId" value="<?php echo $taskId; ?>">
-                        <input type="hidden" name="userId" value="<?php echo ($userType == 0) ? $userId : 0; ?>">
-                        <input type="hidden" name="empId" value="<?php echo ($userType == 1) ? $userId : 0; ?>">
-                        <input type="hidden" name="type" value="<?php echo $userType; ?>">
-                        <input type="hidden" name="send-msg" id="hiddenMessage">
-                    </form>
-                    
-                    <!-- AJAX form (primary) -->
-                    <form id="chatForm" onsubmit="sendMessage(event, <?php echo $taskId; ?>)">
+                    <!-- Primary form method (like admin) -->
+                    <form method="post" action="" id="chatForm">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="message" placeholder="Type your message..." required>
+                            <input type="text" class="form-control" name="send-msg" placeholder="Type your message..." required>
+                            <input type="hidden" name="taskId" value="<?php echo $taskId; ?>">
+                            <input type="hidden" name="userId" value="<?php echo ($userType == 0) ? $userId : 0; ?>">
+                            <input type="hidden" name="empId" value="<?php echo ($userType == 1) ? $userId : 0; ?>">
+                            <input type="hidden" name="type" value="<?php echo $userType; ?>">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-send"></i> Send
                             </button>
