@@ -145,6 +145,7 @@ function showEditModal(type, id) {
 function getLeadForm(data = {}) {
     return `
         <form id="leadForm" onsubmit="submitForm(event, 'leads')">
+            ${data.id ? `<input type="hidden" name="id" value="${data.id}">` : ''}
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">

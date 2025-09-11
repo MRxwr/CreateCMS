@@ -84,8 +84,12 @@ try {
                 throw new Exception('Invalid email format');
             }
             
-            // Check if email already exists
-            $existingClient = selectDB("client", "email = '{$input['email']}'");
+            // Check if email already exists (exclude current client if updating)
+            $emailCheck = "email = '{$input['email']}'";
+            if(isset($input['id']) && !empty($input['id'])) {
+                $emailCheck .= " AND id != " . (int)$input['id'];
+            }
+            $existingClient = selectDB("client", $emailCheck);
             if($existingClient && is_array($existingClient) && count($existingClient) > 0) {
                 throw new Exception('A client with this email already exists');
             }
