@@ -2,7 +2,14 @@
 header('Content-Type: application/json');
 require_once('../admin/includes/config.php');
 require_once('../admin/includes/functions.php');
-require_once('../admin/includes/checkLogin.php');
+require_once('../includes/auth.php');
+
+// Check if user is authenticated
+if (!checkAuthentication()) {
+    http_response_code(401);
+    echo json_encode(['ok' => false, 'data' => 'Authentication required']);
+    exit;
+}
 
 $method = $_SERVER['REQUEST_METHOD'];
 $response = ['ok' => false, 'data' => null];
