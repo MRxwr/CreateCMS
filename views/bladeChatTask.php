@@ -370,23 +370,57 @@ async function sendMessage(event, taskId) {
     if (!message) return;
     
     try {
-        const result = await makeRequest('requests/apiComments.php', {
+        console.log('Sending message:', message);
+        
+        const response = await fetch('requests/apiComments.php', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 taskId: taskId,
                 comment: message
             })
         });
         
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('Non-JSON response:', text);
+            throw new Error('Server returned non-JSON response');
+        }
+        
+        const result = await response.json();
+        console.log('API result:', result);
+        
         if(result.ok) {
             input.value = '';
             // Reload the page to show new message
             location.reload();
+        } else {
+            throw new Error(result.data || 'Failed to send message');
         }
         
     } catch (error) {
+        console.error('Error sending message:', error);
+        
         // Fallback to admin form method if AJAX fails
         console.log('AJAX failed, using form fallback');
+        
+        // Set the hidden form values
+        document.getElementById('hiddenMessage').value = message;
+        
+        // Submit the admin form
+        document.getElementById('adminForm').style.display = 'block';
+        document.getElementById('adminForm').submit();
+    }
+}
         
         // Set the hidden form values
         document.getElementById('hiddenMessage').value = message;
