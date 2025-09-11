@@ -14,7 +14,7 @@ $employeeAllowedPages = ['Home', 'Tasks', 'ChatTask'];
 
 // Check if employee is trying to access restricted pages
 if ($currentUser['type'] == 1) { // Employee
-    if (isset($_GET['v']) && !in_array($_GET['v'], $employeeAllowedPages)) {
+    if (isset($_GET['p']) && !in_array($_GET['p'], $employeeAllowedPages)) {
         // Redirect employees to Tasks page if they try to access restricted areas
         header("Location: ?v=Tasks");
         exit;
@@ -66,8 +66,8 @@ if (isset($_GET['welcome']) && $_GET['welcome'] == '1') {
           </div>';
 }
 
-if( isset($_GET["v"]) && searchFile("views","blade{$_GET["v"]}.php") ){
-	require_once("views/".searchFile("views","blade{$_GET["v"]}.php"));
+if( isset($_GET["p"]) && searchFile("views","blade{$_GET["p"]}.php") ){
+	require_once("views/".searchFile("views","blade{$_GET["p"]}.php"));
 }else{
 	require_once("views/bladeHome.php");
 }
