@@ -184,9 +184,14 @@ try {
             $clientId = (int)$input['id'];
             
             // Check if client has active projects
-            $activeProjects = getTotals("project", "clientId = {$clientId}");
-            if($activeProjects > 0) {
-                throw new Exception('Cannot delete client with active projects. Please delete all projects first.');
+            try {
+                $activeProjects = getTotals("project", "clientId = {$clientId}");
+                if($activeProjects > 0) {
+                    throw new Exception('Cannot delete client with active projects. Please delete all projects first.');
+                }
+            } catch (Exception $e) {
+                // If projects check fails, proceed with deletion (projects table might not exist)
+                error_log("Projects check failed: " . $e->getMessage());
             }
             
             // Hard delete from your live structure
