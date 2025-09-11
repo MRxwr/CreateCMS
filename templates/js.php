@@ -188,7 +188,8 @@ function getLeadForm(data = {}) {
 
 function getProjectForm(data = {}) {
     return `
-        <form id="projectForm" onsubmit="submitForm(event, 'project')">
+        <form id="projectForm" onsubmit="submitForm(event, 'projects')">
+            ${data.id ? `<input type="hidden" name="id" value="${data.id}">` : ''}
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -198,8 +199,12 @@ function getProjectForm(data = {}) {
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label">Client</label>
-                        <input type="text" class="form-control" name="client" value="${data.client || ''}">
+                        <label class="form-label">Client *</label>
+                        <select class="form-control" name="clientId" required>
+                            <option value="">Select Client</option>
+                            <!-- Clients will be loaded dynamically -->
+                        </select>
+                        ${data.clientId ? `<script>setTimeout(() => document.querySelector('select[name="clientId"]').value = '${data.clientId}', 100);</script>` : ''}
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -231,7 +236,7 @@ function getProjectForm(data = {}) {
 
 function getTaskForm(data = {}) {
     return `
-        <form id="taskForm" onsubmit="submitForm(event, 'task')">
+        <form id="taskForm" onsubmit="submitForm(event, 'tasks')">">
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -300,7 +305,7 @@ function getTaskForm(data = {}) {
 
 function getEmployeeForm(data = {}) {
     return `
-        <form id="employeeForm" onsubmit="submitForm(event, 'employee')">
+        <form id="employeeForm" onsubmit="submitForm(event, 'employees')">">
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -513,6 +518,12 @@ function showProfile() {
 // Load dropdown data
 async function loadDropdownData() {
     try {
+        // Load clients for project form
+        const clients = await makeRequest('requests/apiLeads.php');
+        if (clients.ok) {
+            updateSelectOptions('clientId', clients.data, 'id', 'name');
+        }
+        
         // Load projects for task form
         const projects = await makeRequest('requests/apiProjects.php');
         if (projects.ok) {
