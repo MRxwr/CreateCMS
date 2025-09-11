@@ -1,4 +1,29 @@
 <?php
+// Handle form submission like admin bladeComments.php
+if (isset($_POST["taskId"])) {
+    $table = "comments";
+    $_POST["date"] = date('Y-m-d H:i:s');
+    
+    // Clean the data like admin approach
+    $commentData = [
+        'date' => $_POST["date"],
+        'userId' => $_POST["userId"],
+        'empId' => $_POST["empId"],
+        'taskId' => $_POST["taskId"],
+        'send-msg' => $_POST["send-msg"],
+        'type' => $_POST["type"],
+        'status' => 1
+    ];
+    
+    $result = insertDB($table, $commentData);
+    
+    if ($result) {
+        // Redirect to reload the page
+        header("Location: ?v=ChatTask&task=".$_POST["taskId"]);
+        exit;
+    }
+}
+
 // This is the dedicated chat page for a specific task
 if(!isset($_GET['task']) || empty($_GET['task'])) {
     echo '<div class="alert alert-warning">Please select a task to view chat.</div>';
@@ -183,8 +208,13 @@ if ($result && $result->num_rows > 0) {
                     <div class="alert alert-info small mt-2">
                         <strong>Debug Info:</strong><br>
                         Task ID: <?php echo $taskId; ?><br>
+                        Current User ID: <?php echo $userId; ?><br>
+                        Current User Type: <?php echo $userType; ?> (0=User/Admin, 1=Employee)<br>
                         Comments found: <?php echo count($comments ?: []); ?><br>
-                        Comments data: <pre><?php print_r($comments); ?></pre>
+                        <details>
+                            <summary>Raw Comments Data</summary>
+                            <pre><?php print_r($comments); ?></pre>
+                        </details>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -208,14 +238,23 @@ if ($result && $result->num_rows > 0) {
                                             <?php 
                                             if (!$isOwn) {
                                                 // For other people's messages, show "username: message" like in admin
+                                                $displayName = '';
                                                 if (!empty($comment["User"])) {
-                                                    echo "<strong>" . htmlspecialchars($comment["User"]) . ":</strong> " . nl2br(htmlspecialchars($comment['send-msg']));
+                                                    $displayName = $comment["User"];
+                                                } elseif (!empty($comment["EmpUser"])) {
+                                                    $displayName = $comment["EmpUser"];
+                                                } elseif (!empty($comment["UserName"])) {
+                                                    $displayName = $comment["UserName"];
+                                                } elseif (!empty($comment["EmpName"])) {
+                                                    $displayName = $comment["EmpName"];
                                                 } else {
-                                                    echo "<strong>" . htmlspecialchars($comment["EmpUser"]) . ":</strong> " . nl2br(htmlspecialchars($comment['send-msg']));
+                                                    $displayName = "Unknown User";
                                                 }
+                                                
+                                                echo "<strong>" . htmlspecialchars($displayName) . ":</strong> " . nl2br(htmlspecialchars($comment['send-msg'] ?? 'No message content'));
                                             } else {
                                                 // For own messages, just show the message content
-                                                echo nl2br(htmlspecialchars($comment['send-msg']));
+                                                echo nl2br(htmlspecialchars($comment['send-msg'] ?? 'No message content'));
                                             }
                                             ?>
                                         </div>
@@ -240,6 +279,16 @@ if ($result && $result->num_rows > 0) {
                 
                 <!-- Message Input -->
                 <div class="card-footer">
+                    <!-- Form method like admin (fallback) -->
+                    <form method="post" action="" style="display: none;" id="adminForm">
+                        <input type="hidden" name="taskId" value="<?php echo $taskId; ?>">
+                        <input type="hidden" name="userId" value="<?php echo ($userType == 0) ? $userId : 0; ?>">
+                        <input type="hidden" name="empId" value="<?php echo ($userType == 1) ? $userId : 0; ?>">
+                        <input type="hidden" name="type" value="<?php echo $userType; ?>">
+                        <input type="hidden" name="send-msg" id="hiddenMessage">
+                    </form>
+                    
+                    <!-- AJAX form (primary) -->
                     <form id="chatForm" onsubmit="sendMessage(event, <?php echo $taskId; ?>)">
                         <div class="input-group">
                             <input type="text" class="form-control" name="message" placeholder="Type your message..." required>
@@ -336,7 +385,15 @@ async function sendMessage(event, taskId) {
         }
         
     } catch (error) {
-        // Error already handled in makeRequest
+        // Fallback to admin form method if AJAX fails
+        console.log('AJAX failed, using form fallback');
+        
+        // Set the hidden form values
+        document.getElementById('hiddenMessage').value = message;
+        
+        // Submit the admin form
+        document.getElementById('adminForm').style.display = 'block';
+        document.getElementById('adminForm').submit();
     }
 }
 

@@ -80,19 +80,22 @@ try {
                 throw new Exception('You do not have permission to comment on this task');
             }
             
-            // Determine if user is employee or regular user
-            $empId = 0;
-            $isEmployee = selectDB("employee", "id = {$userId} AND status = 0");
-            if($isEmployee && is_array($isEmployee) && count($isEmployee) > 0) {
-                $empId = $userId;
+            // Determine user/employee IDs like in admin bladeComments.php
+            $commentUserId = 0;
+            $commentEmpId = 0;
+            
+            if($userType == 0) { // User/Admin
+                $commentUserId = $userId;
+            } else { // Employee
+                $commentEmpId = $userId;
             }
             
             $commentData = [
-                'userId' => $userId,
-                'empId' => $empId,
+                'userId' => $commentUserId,
+                'empId' => $commentEmpId,
                 'taskId' => $taskId,
                 'send-msg' => trim($input['comment']),
-                'type' => 1,
+                'type' => $userType,
                 'status' => 1
             ];
             
