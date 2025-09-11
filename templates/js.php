@@ -35,7 +35,7 @@ function showToast(message, type = 'success') {
 
 // Profile and Settings functions
 function showProfile() {
-    window.location.href = '?v=Profile';
+    window.location.href = '?p=Profile';
 }
 
 function showSettings() {
@@ -92,7 +92,7 @@ async function makeRequest(url, options = {}) {
 
 // Navigation Functions
 function navigateTo(view) {
-    window.location.href = `?v=${view}`;
+    window.location.href = `?p=${view}`;
 }
 
 // Modal Functions
@@ -692,7 +692,7 @@ function openTaskChat(taskId) {
     });
     
     // Navigate to chat page
-    window.location.href = `?v=ChatTask&task=${taskId}`;
+    window.location.href = `?p=ChatTask&task=${taskId}`;
 }
 
 // Add chat icons to task cards

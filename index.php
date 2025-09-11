@@ -16,7 +16,7 @@ $employeeAllowedPages = ['Home', 'Tasks', 'ChatTask'];
 if ($currentUser['type'] == 1) { // Employee
     if (isset($_GET['p']) && !in_array($_GET['p'], $employeeAllowedPages)) {
         // Redirect employees to Tasks page if they try to access restricted areas
-        header("Location: ?v=Tasks");
+        header("Location: ?p=Tasks");
         exit;
     }
 }
@@ -40,7 +40,7 @@ if (isset($_POST["taskId"]) && isset($_POST["send-msg"])) {
     
     if ($result) {
         // Redirect to avoid resubmission on refresh
-        header("Location: ?v=ChatTask&task=".$_POST["taskId"]);
+        header("Location: ?p=ChatTask&task=".$_POST["taskId"]);
         exit;
     } else {
         $error_message = "Failed to send message. Please try again.";

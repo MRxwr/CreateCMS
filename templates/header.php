@@ -43,7 +43,7 @@ $username = $currentUser['username'];
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand d-flex align-items-center" href="?v=Home">
+            <a class="navbar-brand d-flex align-items-center" href="?p=Home">
                 <img src="img/logo.png" alt="CreateCMS" width="32" height="32" class="me-2">
                 CreateCMS
             </a>
@@ -55,29 +55,29 @@ $username = $currentUser['username'];
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link <?php echo (!isset($_GET['p']) || $_GET['p'] == 'Home') ? 'active' : ''; ?>" href="?v=Home">
+                        <a class="nav-link <?php echo (!isset($_GET['p']) || $_GET['p'] == 'Home') ? 'active' : ''; ?>" href="?p=Home">
                             <i class="bi bi-house-door"></i> Home
                         </a>
                     </li>
                     <?php if ($currentUser['type'] == 0): // Users only ?>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo (isset($_GET['p']) && $_GET['p'] == 'Leads') ? 'active' : ''; ?>" href="?v=Leads">
+                        <a class="nav-link <?php echo (isset($_GET['p']) && $_GET['p'] == 'Leads') ? 'active' : ''; ?>" href="?p=Leads">
                             <i class="bi bi-person-plus"></i> Clients
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo (isset($_GET['p']) && $_GET['p'] == 'Projects') ? 'active' : ''; ?>" href="?v=Projects">
+                        <a class="nav-link <?php echo (isset($_GET['p']) && $_GET['p'] == 'Projects') ? 'active' : ''; ?>" href="?p=Projects">
                             <i class="bi bi-folder"></i> Projects
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo (isset($_GET['p']) && $_GET['p'] == 'Employees') ? 'active' : ''; ?>" href="?v=Employees">
+                        <a class="nav-link <?php echo (isset($_GET['p']) && $_GET['p'] == 'Employees') ? 'active' : ''; ?>" href="?p=Employees">
                             <i class="bi bi-people"></i> Employees
                         </a>
                     </li>
                     <?php endif; ?>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo (isset($_GET['p']) && $_GET['p'] == 'Tasks') ? 'active' : ''; ?>" href="?v=Tasks">
+                        <a class="nav-link <?php echo (isset($_GET['p']) && $_GET['p'] == 'Tasks') ? 'active' : ''; ?>" href="?p=Tasks">
                             <i class="bi bi-check-square"></i> Tasks
                         </a>
                     </li>
