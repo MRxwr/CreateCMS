@@ -1,17 +1,36 @@
 <?php
-// Get dashboard statistics
-$totalLeads = getTotals("leads", "status = '1'");
-$totalProjects = getTotals("projects", "status = '1'");
-$totalTasks = getTotals("tasks", "status != 'DELETED'");
-$totalEmployees = getTotals("employees", "status = '0'");
+// Helper functions for your database status system
+function getStatusLabel($status) {
+    switch((int)$status) {
+        case 0: return 'Pending';
+        case 1: return 'In Progress'; 
+        case 2: return 'Completed';
+        default: return 'Unknown';
+    }
+}
 
-// Get recent tasks
-$recentTasks = selectDB2("tasks.id, tasks.task, tasks.status, tasks.expected, projects.title as project_title, employees.name as employee_name", 
-                        "tasks", 
-                        "tasks.projectId = projects.id AND tasks.to = employees.id ORDER BY tasks.id DESC LIMIT 5");
+function getStatusClass($status) {
+    switch((int)$status) {
+        case 0: return 'warning';
+        case 1: return 'info';
+        case 2: return 'success';
+        default: return 'secondary';
+    }
+}
+
+// Get dashboard statistics using your live database structure
+$totalClients = getTotals("client", "1=1");
+$totalProjects = getTotals("project", "1=1"); 
+$totalTasks = getTotals("task", "status != 2"); // status 2 = deleted
+$totalEmployees = getTotals("employee", "status = 0"); // status 0 = active
+
+// Get recent tasks with proper joins for your database structure
+$recentTasks = selectDB("task t LEFT JOIN project p ON t.projectId = p.id LEFT JOIN employee e ON t.to = e.id", 
+                       "t.status != 2 ORDER BY t.id DESC LIMIT 5", 
+                       "t.id, t.task, t.status, t.expected, p.title as project_title, e.name as employee_name");
 
 // Get project progress
-$projectProgress = selectDB("projects", "status = '1' ORDER BY id DESC LIMIT 5");
+$projectProgress = selectDB("project", "1=1 ORDER BY id DESC LIMIT 5");
 ?>
 
 <div class="container-fluid">
@@ -29,8 +48,8 @@ $projectProgress = selectDB("projects", "status = '1' ORDER BY id DESC LIMIT 5")
             <div class="card stats-card h-100">
                 <div class="card-body text-center">
                     <i class="bi bi-person-plus display-4 mb-3"></i>
-                    <div class="stats-number"><?php echo $totalLeads ?: 0; ?></div>
-                    <div class="stats-label">Total Leads</div>
+                    <div class="stats-number"><?php echo $totalClients ?: 0; ?></div>
+                    <div class="stats-label">Total Clients</div>
                 </div>
             </div>
         </div>
@@ -96,8 +115,8 @@ $projectProgress = selectDB("projects", "status = '1' ORDER BY id DESC LIMIT 5")
                                         <td><?php echo htmlspecialchars($task['project_title']); ?></td>
                                         <td><?php echo htmlspecialchars($task['employee_name']); ?></td>
                                         <td>
-                                            <span class="badge status-<?php echo strtolower($task['status']); ?>">
-                                                <?php echo $task['status']; ?>
+                                            <span class="badge status-<?php echo getStatusClass($task['status']); ?>">
+                                                <?php echo getStatusLabel($task['status']); ?>
                                             </span>
                                         </td>
                                         <td>
@@ -177,8 +196,8 @@ $projectProgress = selectDB("projects", "status = '1' ORDER BY id DESC LIMIT 5")
                         <?php foreach($projectProgress as $project): ?>
                         <?php
                         // Calculate project progress based on tasks
-                        $totalProjectTasks = getTotals("tasks", "projectId = {$project['id']} AND status != 'DELETED'");
-                        $completedProjectTasks = getTotals("tasks", "projectId = {$project['id']} AND status = 'FINISHED'");
+                        $totalProjectTasks = getTotals("task", "projectId = {$project['id']} AND status != 2");
+                        $completedProjectTasks = getTotals("task", "projectId = {$project['id']} AND status = 2");
                         $progress = $totalProjectTasks > 0 ? round(($completedProjectTasks / $totalProjectTasks) * 100) : 0;
                         ?>
                         <div class="col-lg-6 mb-3">
