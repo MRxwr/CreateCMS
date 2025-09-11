@@ -119,6 +119,7 @@
                 <div class="sidebar bg-light p-3 rounded shadow-sm">
                     <h6 class="sidebar-heading">Quick Actions</h6>
                     <div class="d-grid gap-2">
+                        <?php if($currentUser['type'] == 0): // Only users can add clients and projects ?>
                         <button class="btn btn-outline-primary btn-sm" onclick="showAddModal('lead')">
                             <i class="bi bi-plus-circle"></i> Add Client
                         </button>
@@ -132,6 +133,13 @@
                         <button class="btn btn-outline-warning btn-sm" onclick="showAddModal('employee')">
                             <i class="bi bi-plus-circle"></i> Add Employee
                         </button>
+                        <?php endif; ?>
+                        <?php else: // Employees see limited actions ?>
+                        <div class="text-center text-muted">
+                            <i class="bi bi-person-badge"></i>
+                            <p class="small mt-2">Employee Access<br>
+                            <small>View and update your assigned tasks</small></p>
+                        </div>
                         <?php endif; ?>
                     </div>
                 </div>

@@ -1,4 +1,7 @@
 <?php
+// Get current user
+$currentUser = getCurrentUser();
+
 // This is the dedicated chat page for a specific task
 if(!isset($_GET['task']) || empty($_GET['task'])) {
     echo '<div class="alert alert-warning">Please select a task to view chat.</div>';
@@ -138,9 +141,11 @@ if ($result && $result->num_rows > 0) {
                     
                     <!-- Quick Actions -->
                     <div class="d-grid gap-2 mt-3">
+                        <?php if($currentUser['type'] == 0): // Only users can edit tasks ?>
                         <button class="btn btn-outline-primary btn-sm" onclick="editTask(<?php echo $task['id']; ?>)">
                             <i class="bi bi-pencil"></i> Edit Task
                         </button>
+                        <?php endif; ?>
                         
                         <?php if($task['status'] == 'PENDING'): ?>
                         <button class="btn btn-outline-info btn-sm" onclick="updateTaskStatus(<?php echo $task['id']; ?>, 'DOING')">

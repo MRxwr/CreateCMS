@@ -237,6 +237,7 @@ if ($currentUser['type'] == 0) {
                     </h5>
                 </div>
                 <div class="card-body">
+                    <?php if($currentUser['type'] == 0): // Users can add everything ?>
                     <div class="d-grid gap-3">
                         <button class="btn btn-outline-primary btn-lg" onclick="showAddModal('lead')">
                             <i class="bi bi-person-plus"></i>
@@ -257,6 +258,22 @@ if ($currentUser['type'] == 0) {
                         </button>
                         <?php endif; ?>
                     </div>
+                    <?php else: // Employees see task shortcuts ?>
+                    <div class="d-grid gap-3">
+                        <a href="?v=Tasks" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-list-task"></i>
+                            View My Tasks
+                        </a>
+                        <button class="btn btn-outline-info btn-lg" onclick="filterTasksByStatus('pending')">
+                            <i class="bi bi-clock"></i>
+                            Pending Tasks
+                        </button>
+                        <button class="btn btn-outline-success btn-lg" onclick="filterTasksByStatus('in-progress')">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            In Progress Tasks
+                        </button>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
