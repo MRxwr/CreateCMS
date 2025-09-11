@@ -192,6 +192,82 @@ function selectJoinDB($table, $joinData, $where){
     }
 }
 
+function selectJoinDBNew($table, $joinData, $where, $placeholders = [], $order = ""){
+    global $dbconnect;
+    global $userID, $empUsername, $_GET;
+    
+    // Build SELECT clause
+    $sql = "SELECT ";
+    for($i = 0; $i < sizeof($joinData["select"]); $i++){
+        $sql .= $joinData["select"][$i];
+        if ($i+1 != sizeof($joinData["select"])){
+            $sql .= ", ";
+        }
+    }
+    
+    // Build FROM and JOIN clauses
+    $sql .= " FROM `$table` as t ";
+    for($i = 0; $i < sizeof($joinData["join"]); $i++){
+        $counter = $i+1;
+        $sql .= " JOIN `".$joinData["join"][$i]."` as t{$counter} ";
+        if(isset($joinData["on"][$i]) && !empty($joinData["on"][$i])){
+            $sql .= " ON ".$joinData["on"][$i]." ";
+        }
+    }
+    
+    // Add WHERE clause if provided
+    if(!empty($where)){
+        $sql .= " WHERE " . $where;
+    }
+    
+    // Add ORDER BY clause if provided
+    if(!empty($order)){
+        $sql .= " ORDER BY " . $order;
+    }
+    
+    // Log the query if module is set
+    if(isset($_GET["p"]) && !empty($_GET["p"])){
+        $array = array(
+            "userId" => $userID,
+            "username" => $empUsername,
+            "module" => $_GET["p"],
+            "action" => "Select",
+            "sqlQuery" => json_encode(array(
+                "table" => $table,
+                "joinData" => $joinData,
+                "where" => $where,
+                "order" => $order
+            )),
+        );
+        LogsHistory($array);
+    }
+    
+    // Prepare and execute the statement
+    if($stmt = $dbconnect->prepare($sql)){
+        // If we have placeholders, bind them
+        if(!empty($placeholders)){
+            $types = str_repeat('s', count($placeholders)); // Assuming all parameters are strings
+            $stmt->bind_param($types, ...$placeholders);
+        }
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $array = [];
+        
+        while($row = $result->fetch_assoc()){
+            $array[] = $row;
+        }
+        
+        if(isset($array) && !empty($array)){
+            return $array;
+        }else{
+            return 0;
+        }
+    }else{
+        return 0;
+    }
+}
+
 function insertDB($table, $data){
     GLOBAL $dbconnect, $userID, $empUsername, $_GET;
     $check = [';', '"'];

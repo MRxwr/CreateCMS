@@ -52,15 +52,18 @@ if ( isset($_GET["return"]) ){
 		</thead>
 		<tbody>
 		<?php
-		$sql = "SELECT c.*, u.username
-				FROM `client` as c
-				JOIN `user` as u
-				ON c.userId = u.id
-				WHERE
-				c.type LIKE '".$typeOfCustomer[$i]."'
-				";
-		$result = $dbconnect->query($sql);
-		while ( $row = $result->fetch_assoc() ){
+		// Use the new secure join function with placeholders for better security
+		$joinData = array(
+			"select" => array("c.*", "u.username"),
+			"join" => array("user"),
+			"on" => array("c.userId = u.id")
+		);
+		$where = "c.type = ?";
+		$placeholders = array($typeOfCustomer[$i]);
+		$order = "c.date DESC"; // Order by date descending
+		$results = selectJoinDBNew("client", $joinData, $where, $placeholders, $order);
+		if($results){
+			foreach($results as $row){
 		?>
 			<tr>
 				<td><?php echo substr($row["date"], 0, 10); ?></td>
@@ -76,6 +79,7 @@ if ( isset($_GET["return"]) ){
 				</td>
 			</tr>
 		<?php
+			}
 		}
 		?>
 		</tbody>
