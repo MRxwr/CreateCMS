@@ -49,17 +49,38 @@ if (function_exists('getTotals')) {
 // Test selectDB function  
 echo "<h3>Testing selectDB function:</h3>";
 if (function_exists('selectDB')) {
-    $recentTasks = selectDB("task t LEFT JOIN project p ON t.projectId = p.id LEFT JOIN employee e ON t.to = e.id", 
-                           "t.status != 2 ORDER BY t.id DESC LIMIT 3", 
-                           "t.id, t.task, t.status, t.expected, p.title as project_title, e.name as employee_name");
+    // Test simple selectDB call (2 parameters only)
+    $projects = selectDB("project", "1=1 LIMIT 3");
     
-    if ($recentTasks && is_array($recentTasks)) {
-        echo "<p style='color: green;'>selectDB function working. Found " . count($recentTasks) . " tasks</p>";
-        foreach ($recentTasks as $task) {
-            echo "<p>Task: " . $task['task'] . " | Project: " . ($task['project_title'] ?? 'No project') . "</p>";
+    if ($projects && is_array($projects)) {
+        echo "<p style='color: green;'>selectDB function working. Found " . count($projects) . " projects</p>";
+        foreach ($projects as $project) {
+            echo "<p>Project: " . $project['title'] . " | Status: " . $project['status'] . "</p>";
         }
     } else {
-        echo "<p style='color: red;'>selectDB function returned: " . var_export($recentTasks, true) . "</p>";
+        echo "<p style='color: red;'>selectDB function returned: " . var_export($projects, true) . "</p>";
+    }
+    
+    // Test the JOIN query used in dashboard
+    echo "<h4>Testing JOIN query:</h4>";
+    $query = "SELECT t.*, p.title as project_title, e.name as employee_name 
+              FROM task t 
+              LEFT JOIN project p ON t.projectId = p.id 
+              LEFT JOIN employee e ON t.to = e.id 
+              WHERE t.status != 2 
+              ORDER BY t.id DESC 
+              LIMIT 3";
+    $result = $dbconnect->query($query);
+    if ($result && $result->num_rows > 0) {
+        echo "<p style='color: green;'>JOIN query working. Found " . $result->num_rows . " tasks</p>";
+        while ($row = $result->fetch_assoc()) {
+            echo "<p>Task: " . $row['task'] . " | Project: " . ($row['project_title'] ?? 'No project') . " | Employee: " . ($row['employee_name'] ?? 'No employee') . "</p>";
+        }
+    } else {
+        echo "<p style='color: red;'>JOIN query failed or returned no data</p>";
+        if ($dbconnect->error) {
+            echo "<p style='color: red;'>MySQL Error: " . $dbconnect->error . "</p>";
+        }
     }
 } else {
     echo "<p style='color: red;'>selectDB function not found</p>";

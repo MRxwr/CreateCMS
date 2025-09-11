@@ -24,10 +24,21 @@ $totalProjects = getTotals("project", "1=1");
 $totalTasks = getTotals("task", "status != 2"); // status 2 = deleted
 $totalEmployees = getTotals("employee", "status = 0"); // status 0 = active
 
-// Get recent tasks with proper joins for your database structure
-$recentTasks = selectDB("task t LEFT JOIN project p ON t.projectId = p.id LEFT JOIN employee e ON t.to = e.id", 
-                       "t.status != 2 ORDER BY t.id DESC LIMIT 5", 
-                       "t.id, t.task, t.status, t.expected, p.title as project_title, e.name as employee_name");
+// Get recent tasks using direct query since selectDB doesn't support JOINs with 3 parameters
+$recentTasks = [];
+$query = "SELECT t.*, p.title as project_title, e.name as employee_name 
+          FROM task t 
+          LEFT JOIN project p ON t.projectId = p.id 
+          LEFT JOIN employee e ON t.to = e.id 
+          WHERE t.status != 2 
+          ORDER BY t.id DESC 
+          LIMIT 5";
+$result = $dbconnect->query($query);
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $recentTasks[] = $row;
+    }
+}
 
 // Get project progress
 $projectProgress = selectDB("project", "1=1 ORDER BY id DESC LIMIT 5");
