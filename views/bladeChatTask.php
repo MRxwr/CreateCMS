@@ -195,38 +195,32 @@ if ($result && $result->num_rows > 0) {
                         <?php if($comments && is_array($comments)): ?>
                             <?php foreach($comments as $comment): ?>
                             <?php
-                            // Determine sender name and ownership like in admin bladeComments
+                            // Determine sender name and ownership exactly like in admin bladeComments
                             $senderName = 'Unknown';
-                            $isOwn = false;
                             
-                            if (!empty($comment["User"])) {
-                                $senderName = $comment["User"];
-                                $isOwn = ($userType == 0 && $userId == $comment["userId"]);
-                            } else if (!empty($comment["EmpUser"])) {
-                                $senderName = $comment["EmpUser"];
-                                $isOwn = ($userType == 1 && $userId == $comment["empId"]);
-                            } else if (!empty($comment["UserName"])) {
-                                $senderName = $comment["UserName"];
-                                $isOwn = ($userType == 0 && $userId == $comment["userId"]);
-                            } else if (!empty($comment["EmpName"])) {
-                                $senderName = $comment["EmpName"];
-                                $isOwn = ($userType == 1 && $userId == $comment["empId"]);
-                            }
+                            // Check if this is the current user's message using admin logic
+                            $isOwn = ($userId == $comment["userId"] || $userId == $comment["empId"]);
                             ?>
                             <div class="chat-message <?php echo $isOwn ? 'own' : 'other'; ?> mb-3">
                                 <div class="d-flex <?php echo $isOwn ? 'justify-content-end' : 'justify-content-start'; ?>">
                                     <div class="message-bubble p-3 rounded" style="max-width: 70%; background-color: <?php echo $isOwn ? 'var(--primary-color)' : '#e9ecef'; ?>; color: <?php echo $isOwn ? 'white' : 'var(--dark-color)'; ?>;">
-                                        <?php if(!$isOwn): ?>
-                                        <div class="sender mb-1">
-                                            <small style="font-weight: 600; opacity: 0.8;">
-                                                <?php echo htmlspecialchars($senderName); ?>
-                                            </small>
+                                        <div class="content">
+                                            <?php 
+                                            if (!$isOwn) {
+                                                // For other people's messages, show "username: message" like in admin
+                                                if (!empty($comment["User"])) {
+                                                    echo "<strong>" . htmlspecialchars($comment["User"]) . ":</strong> " . nl2br(htmlspecialchars($comment['send-msg']));
+                                                } else {
+                                                    echo "<strong>" . htmlspecialchars($comment["EmpUser"]) . ":</strong> " . nl2br(htmlspecialchars($comment['send-msg']));
+                                                }
+                                            } else {
+                                                // For own messages, just show the message content
+                                                echo nl2br(htmlspecialchars($comment['send-msg']));
+                                            }
+                                            ?>
                                         </div>
-                                        <?php endif; ?>
                                         
-                        <div class="content">
-                            <?php echo nl2br(htmlspecialchars($comment['send-msg'])); ?>
-                        </div>                                        <div class="time mt-2">
+                                        <div class="time mt-2">
                                             <small style="opacity: 0.7; font-size: 0.75rem;">
                                                 <?php echo date('M d, Y - H:i', strtotime($comment['date'])); ?>
                                             </small>
