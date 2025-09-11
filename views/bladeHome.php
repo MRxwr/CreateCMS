@@ -65,7 +65,14 @@ if ($result && $result->num_rows > 0) {
 
 // Get project progress (only for users)
 if ($currentUser['type'] == 0) {
-    $projectProgress = selectDB("project", "1=1 ORDER BY id DESC LIMIT 5");
+    $projectProgress = [];
+    $query = "SELECT * FROM project WHERE 1=1 ORDER BY id DESC LIMIT 5";
+    $result = $dbconnect->query($query);
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $projectProgress[] = $row;
+        }
+    }
 }
 ?>
 
