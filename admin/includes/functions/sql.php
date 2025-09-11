@@ -7,8 +7,8 @@ function deleteDB($table, $where){
     $sql = "DELETE FROM `" . $table . "` WHERE " . $where;
     if( isset($_GET["p"]) && !empty($_GET["p"]) ){
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
+            "userId" => isset($userID) ? $userID : 0,
+            "username" => isset($empUsername) ? $empUsername : 0,
             "module" => $_GET["p"],
             "action" => "Delete",
             "sqlQuery" => json_encode(array("table"=>$table,"where"=>$where)),
@@ -34,8 +34,8 @@ function deleteDBNew($table, $params, $where){
     $sql = "DELETE FROM `" . $table . "` WHERE " . $where;
     if (isset($_GET["p"]) && !empty($_GET["p"])) {
         $array = array(
-            "userId" => $userID,
-            "username" => $empUsername,
+            "userId" => isset($userID) ? $userID : 0,
+            "username" => isset($empUsername) ? $empUsername : 0,
             "module" => $_GET["p"],
             "action" => "Delete",
             "sqlQuery" => json_encode(array("table" => $table, "where" => $where)),
