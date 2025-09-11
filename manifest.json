@@ -1,0 +1,88 @@
+{
+  "name": "CreateCMS - Project Management System",
+  "short_name": "CreateCMS",
+  "description": "A comprehensive project management system for teams",
+  "start_url": "/CreateCMS/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d6efd",
+  "orientation": "portrait-primary",
+  "scope": "/CreateCMS/",
+  "icons": [
+    {
+      "src": "img/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "img/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["productivity", "business"],
+  "screenshots": [
+    {
+      "src": "img/screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your dashboard",
+      "url": "/?v=Home",
+      "icons": [
+        {
+          "src": "img/logo.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "short_name": "Tasks",
+      "description": "Manage your tasks",
+      "url": "/?v=Tasks",
+      "icons": [
+        {
+          "src": "img/logo.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "short_name": "Projects",
+      "description": "View your projects",
+      "url": "/?v=Projects",
+      "icons": [
+        {
+          "src": "img/logo.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Add Task",
+      "short_name": "Add Task",
+      "description": "Create a new task",
+      "url": "/?v=Tasks&action=add",
+      "icons": [
+        {
+          "src": "img/logo.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "lang": "en-US",
+  "dir": "ltr"
+}

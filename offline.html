@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - CreateCMS</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        
+        .offline-container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .retry-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .retry-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .offline-tips {
+            margin-top: 2rem;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .offline-tips h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        
+        .offline-tips ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .offline-tips li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .offline-icon {
+                font-size: 3rem;
+            }
+            
+            .offline-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1>You're Offline</h1>
+        <p>
+            It looks like you're not connected to the internet. 
+            Don't worry, some features of CreateCMS are still available offline.
+        </p>
+        
+        <a href="javascript:window.location.reload()" class="retry-btn">
+            Try Again
+        </a>
+        
+        <div class="offline-tips">
+            <h3>📋 What you can do offline:</h3>
+            <ul>
+                <li>View previously loaded dashboard data</li>
+                <li>Browse cached project information</li>
+                <li>View task details from cache</li>
+                <li>Access offline documentation</li>
+            </ul>
+        </div>
+        
+        <div class="offline-tips" style="margin-top: 1rem;">
+            <h3>🔄 Automatic sync will happen when you're back online:</h3>
+            <ul>
+                <li>Pending task updates</li>
+                <li>Draft comments and messages</li>
+                <li>New project data</li>
+                <li>System notifications</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Check connection status
+        function updateOnlineStatus() {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }
+        
+        // Listen for connection changes
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', function() {
+            console.log('Connection lost');
+        });
+        
+        // Auto-retry every 30 seconds
+        setInterval(() => {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }, 30000);
+        
+        // Show current connection status
+        console.log('Connection status:', navigator.onLine ? 'Online' : 'Offline');
+    </script>
+</body>
+</html>
