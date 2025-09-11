@@ -207,8 +207,8 @@ $projectProgress = selectDB("project", "1=1 ORDER BY id DESC LIMIT 5");
                         <?php foreach($projectProgress as $project): ?>
                         <?php
                         // Calculate project progress based on tasks
-                        $totalProjectTasks = getTotals("task", "projectId = {$project['id']} AND status != 2");
-                        $completedProjectTasks = getTotals("task", "projectId = {$project['id']} AND status = 2");
+                        $totalProjectTasks = getTotals("task", "projectId = {$project['id']}"); // all tasks
+                        $completedProjectTasks = getTotals("task", "projectId = {$project['id']} AND status = 2"); // completed
                         $progress = $totalProjectTasks > 0 ? round(($completedProjectTasks / $totalProjectTasks) * 100) : 0;
                         ?>
                         <div class="col-lg-6 mb-3">

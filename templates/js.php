@@ -546,5 +546,138 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('hidden.bs.modal', function(event) {
         event.target.remove();
     });
+    
+    // Add click handlers for task cards
+    setupTaskCardHandlers();
+    
+    // Add chat icons to task cards on tasks page
+    if (window.location.search.includes('v=Tasks')) {
+        setTimeout(addChatIconsToTasks, 100);
+    }
 });
+
+// Task status update and chat functionality
+function setupTaskCardHandlers() {
+    // Handle task card clicks for status updates
+    document.addEventListener('click', function(event) {
+        const taskCard = event.target.closest('.task-card');
+        if (taskCard && event.target.classList.contains('badge')) {
+            const taskId = taskCard.dataset.taskId;
+            if (taskId) {
+                showTaskStatusModal(taskId);
+            }
+        }
+        
+        // Handle chat icon clicks
+        if (event.target.classList.contains('chat-icon') || 
+            event.target.closest('.chat-icon')) {
+            const taskCard = event.target.closest('.task-card');
+            const taskId = taskCard ? taskCard.dataset.taskId : null;
+            if (taskId) {
+                openTaskChat(taskId);
+            }
+        }
+    });
+}
+
+// Show task status update modal
+function showTaskStatusModal(taskId) {
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.id = 'taskStatusModal';
+    modal.innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Task Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-warning" onclick="updateTaskStatus(${taskId}, 0)">
+                            <i class="bi bi-clock"></i> Set to Pending
+                        </button>
+                        <button class="btn btn-info" onclick="updateTaskStatus(${taskId}, 1)">
+                            <i class="bi bi-arrow-clockwise"></i> Set to In Progress
+                        </button>
+                        <button class="btn btn-success" onclick="updateTaskStatus(${taskId}, 2)">
+                            <i class="bi bi-check-circle"></i> Mark as Completed
+                        </button>
+                        <button class="btn btn-secondary" onclick="updateTaskStatus(${taskId}, 3)">
+                            <i class="bi bi-pause-circle"></i> Put on Hold
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="openTaskChat(${taskId})">
+                        <i class="bi bi-chat"></i> Open Chat
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    const bootstrapModal = new bootstrap.Modal(modal);
+    bootstrapModal.show();
+}
+
+// Update task status
+async function updateTaskStatus(taskId, status) {
+    try {
+        const response = await makeRequest('requests/apiTasks.php', {
+            method: 'PUT',
+            body: JSON.stringify({ id: taskId, status: status })
+        });
+        
+        if (response.ok) {
+            showToast('Task status updated successfully!', 'success');
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('taskStatusModal'));
+            modal.hide();
+            // Reload the page to show updated status
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            throw new Error(response.data || 'Failed to update task status');
+        }
+    } catch (error) {
+        console.error('Error updating task status:', error);
+        showToast('Error updating task status: ' + error.message, 'error');
+    }
+}
+
+// Open task chat
+function openTaskChat(taskId) {
+    // Close any existing modals
+    const existingModals = document.querySelectorAll('.modal.show');
+    existingModals.forEach(modal => {
+        const bootstrapModal = bootstrap.Modal.getInstance(modal);
+        if (bootstrapModal) {
+            bootstrapModal.hide();
+        }
+    });
+    
+    // Navigate to chat page
+    window.location.href = `?v=ChatTask&task=${taskId}`;
+}
+
+// Add chat icons to task cards
+function addChatIconsToTasks() {
+    const taskCards = document.querySelectorAll('.task-card');
+    taskCards.forEach(card => {
+        const cardBody = card.querySelector('.card-body');
+        if (cardBody && !card.querySelector('.chat-icon')) {
+            const chatIcon = document.createElement('button');
+            chatIcon.className = 'btn btn-sm btn-outline-primary chat-icon position-absolute';
+            chatIcon.style.cssText = 'top: 5px; right: 5px; z-index: 10;';
+            chatIcon.innerHTML = '<i class="bi bi-chat"></i>';
+            chatIcon.title = 'Open Chat';
+            cardBody.style.position = 'relative';
+            cardBody.appendChild(chatIcon);
+        }
+    });
+}
 </script>

@@ -329,4 +329,52 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #0056b3;
 }
+
+/* Task Card Improvements */
+.task-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.task-card .badge {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.task-card .badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.task-card .badge:after {
+    content: "📝";
+    position: absolute;
+    right: -15px;
+    top: -5px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.task-card .badge:hover:after {
+    opacity: 1;
+}
+
+/* Chat button styling */
+.chat-icon {
+    transition: all 0.2s ease;
+}
+
+.chat-icon:hover {
+    transform: scale(1.1);
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: white !important;
+}
 </style>

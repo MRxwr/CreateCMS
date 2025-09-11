@@ -141,8 +141,16 @@ echo "<a href='requests/apiLeads.php' target='_blank'>Test Leads/Clients API</a>
 echo "<a href='requests/apiComments.php?taskId=1' target='_blank'>Test Comments API (Task ID 1)</a><br><br>";
 
 echo "<h3>Testing Other Pages:</h3>";
-echo "<a href='index.php?v=Tasks' target='_blank'>Test Tasks Page</a><br>";
-echo "<a href='index.php?v=Projects' target='_blank'>Test Projects Page</a><br>";
+echo "<a href='index.php?v=Tasks' target='_blank'>Test Tasks Page</a> - <em>Click on status badges to update, chat icons to access task chat</em><br>";
+echo "<a href='index.php?v=Projects' target='_blank'>Test Projects Page</a> - <em>Progress bars should now work correctly</em><br>";
 echo "<a href='index.php?v=Employees' target='_blank'>Test Employees Page</a><br>";
 echo "<a href='index.php?v=Leads' target='_blank'>Test Leads/Clients Page</a><br>";
+
+echo "<br><h3>New Features Added:</h3>";
+echo "<ul>";
+echo "<li><strong>Task Status Updates:</strong> Click on any status badge on task cards to change status</li>";
+echo "<li><strong>Task Chat:</strong> Click the chat icon on task cards or use the 'Open Chat' button in status modal</li>";
+echo "<li><strong>Fixed Progress Bars:</strong> Project progress calculations now include completed tasks in total</li>";
+echo "<li><strong>Improved UI:</strong> Task cards have hover effects and visual improvements</li>";
+echo "</ul>";
 ?>
