@@ -85,4 +85,7 @@ if (function_exists('selectDB')) {
 } else {
     echo "<p style='color: red;'>selectDB function not found</p>";
 }
+
+echo "<br><br><h3>Testing API Dashboard:</h3>";
+echo "<a href='requests/apiDashboard.php' target='_blank'>Test API Dashboard (opens in new tab)</a><br><br>";
 ?>

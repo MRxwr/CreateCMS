@@ -27,10 +27,21 @@ try {
     // Total employees (active status = 0)
     $stats['employees'] = getTotals("employee", "status = 0");
     
-    // Recent tasks (last 5)
-    $recentTasks = selectDB("task t LEFT JOIN project p ON t.projectId = p.id LEFT JOIN employee e ON t.to = e.id", 
-        "t.status != 2 ORDER BY t.id DESC LIMIT 5", 
-        "t.id, t.task, t.status, t.expected, t.date, p.title as project_title, e.name as employee_name");
+    // Recent tasks (last 5) - Fixed to use direct query
+    $recentTasks = [];
+    $query = "SELECT t.id, t.task, t.status, t.expected, t.date, p.title as project_title, e.name as employee_name 
+              FROM task t 
+              LEFT JOIN project p ON t.projectId = p.id 
+              LEFT JOIN employee e ON t.to = e.id 
+              WHERE t.status != 2 
+              ORDER BY t.id DESC 
+              LIMIT 5";
+    $result = $dbconnect->query($query);
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $recentTasks[] = $row;
+        }
+    }
     
     // Task status breakdown (based on your numeric status system)
     $taskStatusBreakdown = [
@@ -86,22 +97,54 @@ try {
         }
     }
     
-    // Overdue tasks
+    // Overdue tasks - Fixed to use direct query
+    $overdueTasks = [];
     $currentDate = date('Y-m-d H:i:s');
-    $overdueTasks = selectDB("task t LEFT JOIN project p ON t.projectId = p.id LEFT JOIN employee e ON t.to = e.id", 
-        "t.status != 2 AND t.status != 2 AND t.expected < '{$currentDate}' ORDER BY t.expected ASC LIMIT 10", 
-        "t.id, t.task, t.status, t.expected, p.title as project_title, e.name as employee_name");
+    $query = "SELECT t.id, t.task, t.status, t.expected, p.title as project_title, e.name as employee_name 
+              FROM task t 
+              LEFT JOIN project p ON t.projectId = p.id 
+              LEFT JOIN employee e ON t.to = e.id 
+              WHERE t.status != 2 AND t.expected < '{$currentDate}' 
+              ORDER BY t.expected ASC 
+              LIMIT 10";
+    $result = $dbconnect->query($query);
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $overdueTasks[] = $row;
+        }
+    }
     
-    // Recent activity (comments from last 24 hours)
+    // Recent activity (comments from last 24 hours) - Fixed to use direct query
+    $recentComments = [];
     $yesterday = date('Y-m-d H:i:s', strtotime('-24 hours'));
-    $recentComments = selectDB("comments c LEFT JOIN task t ON c.taskId = t.id LEFT JOIN user u ON c.userId = u.id LEFT JOIN employee e ON c.empId = e.id", 
-        "c.date >= '{$yesterday}' AND c.status = 1 ORDER BY c.id DESC LIMIT 10", 
-        "c.*, t.task as task_title, COALESCE(u.name, e.name) as user_name");
+    $query = "SELECT c.*, t.task as task_title, COALESCE(u.name, e.name) as user_name 
+              FROM comments c 
+              LEFT JOIN task t ON c.taskId = t.id 
+              LEFT JOIN user u ON c.userId = u.id 
+              LEFT JOIN employee e ON c.empId = e.id 
+              WHERE c.date >= '{$yesterday}' AND c.status = 1 
+              ORDER BY c.id DESC 
+              LIMIT 10";
+    $result = $dbconnect->query($query);
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $recentComments[] = $row;
+        }
+    }
     
-    // Recent invoices (if you want to include them)
-    $recentInvoices = selectDB("invoice i LEFT JOIN project p ON i.projectId = p.id", 
-        "1=1 ORDER BY i.id DESC LIMIT 5", 
-        "i.*, p.title as project_title");
+    // Recent invoices (if you want to include them) - Fixed to use direct query
+    $recentInvoices = [];
+    $query = "SELECT i.*, p.title as project_title 
+              FROM invoice i 
+              LEFT JOIN project p ON i.projectId = p.id 
+              ORDER BY i.id DESC 
+              LIMIT 5";
+    $result = $dbconnect->query($query);
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $recentInvoices[] = $row;
+        }
+    }
     
     $dashboardData = [
         'stats' => [
@@ -111,17 +154,17 @@ try {
             $stats['employees']
         ],
         'detailed_stats' => $stats,
-        'recent_tasks' => $recentTasks ?: [],
+        'recent_tasks' => $recentTasks,
         'task_status_breakdown' => $taskStatusBreakdown,
         'project_progress' => $projectProgress,
         'employee_productivity' => $employeeProductivity,
-        'overdue_tasks' => $overdueTasks ?: [],
-        'recent_activity' => $recentComments ?: [],
-        'recent_invoices' => $recentInvoices ?: [],
+        'overdue_tasks' => $overdueTasks,
+        'recent_activity' => $recentComments,
+        'recent_invoices' => $recentInvoices,
         'user_info' => [
-            'id' => $userId,
-            'username' => $username,
-            'type' => $userType
+            'id' => $userId ?? null,
+            'username' => $username ?? null,
+            'type' => $userType ?? null
         ]
     ];
     

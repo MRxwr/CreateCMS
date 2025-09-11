@@ -11,15 +11,9 @@
   "icons": [
     {
       "src": "img/logo.png",
-      "sizes": "192x192",
+      "sizes": "any",
       "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "img/logo.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     }
   ],
   "categories": ["productivity", "business"],
@@ -40,7 +34,7 @@
       "icons": [
         {
           "src": "img/logo.png",
-          "sizes": "96x96"
+          "sizes": "any"
         }
       ]
     },
@@ -52,7 +46,7 @@
       "icons": [
         {
           "src": "img/logo.png",
-          "sizes": "96x96"
+          "sizes": "any"
         }
       ]
     },
@@ -64,7 +58,7 @@
       "icons": [
         {
           "src": "img/logo.png",
-          "sizes": "96x96"
+          "sizes": "any"
         }
       ]
     },
@@ -76,7 +70,7 @@
       "icons": [
         {
           "src": "img/logo.png",
-          "sizes": "96x96"
+          "sizes": "any"
         }
       ]
     }
