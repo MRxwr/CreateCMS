@@ -1,13 +1,6 @@
 <?php
-// Get projects using direct query to avoid ORDER BY issues in selectDB
-$projects = [];
-$query = "SELECT * FROM project WHERE status != 2 ORDER BY id DESC";
-$result = $dbconnect->query($query);
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $projects[] = $row;
-    }
-}
+// Get projects using correct table name and status system
+$projects = selectDB("project", "status != 2 ORDER BY id DESC"); // status 2 = deleted
 ?>
 
 <div class="container-fluid">

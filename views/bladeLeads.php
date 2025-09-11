@@ -1,13 +1,6 @@
 <?php
 // Get leads from client table (your database structure uses client table for leads/customers)
-$leads = [];
-$query = "SELECT * FROM client WHERE status != 2 ORDER BY id DESC";
-$result = $dbconnect->query($query);
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $leads[] = $row;
-    }
-}
+$leads = selectDB("client", "status != 2 ORDER BY id DESC"); // status 2 = deleted
 ?>
 
 <div class="container-fluid">
