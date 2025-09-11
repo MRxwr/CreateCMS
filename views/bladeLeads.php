@@ -250,6 +250,8 @@ function editLead(id) {
                 const content = getLeadForm(lead) + `<input type="hidden" name="id" value="${id}">`;
                 const modal = createModal('editLeadModal', `Edit Lead - ${lead.name}`, content);
                 modal.show();
+            }else {
+                showToast('Lead not found', 'warning');
             }
         })
         .catch(error => showToast('Error loading lead details', 'danger'));
