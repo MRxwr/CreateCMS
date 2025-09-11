@@ -127,7 +127,7 @@ $leads = selectDB("client", "status != 2 ORDER BY id DESC"); // status 2 = delet
                                                 <button class="btn btn-sm btn-outline-secondary" onclick="editLead(<?php echo $lead['id']; ?>)">
                                                     <i class="bi bi-pencil"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteItem('lead', <?php echo $lead['id']; ?>, '<?php echo addslashes($lead['name']); ?>')">
+                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteItem('leads', <?php echo $lead['id']; ?>, '<?php echo addslashes($lead['name']); ?>')">>
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </div>
