@@ -145,6 +145,29 @@ echo "<a href='index.php?v=Tasks' target='_blank'>Test Tasks Page</a> - <em>Clic
 echo "<a href='index.php?v=Projects' target='_blank'>Test Projects Page</a> - <em>Progress bars should now work correctly</em><br>";
 echo "<a href='index.php?v=Employees' target='_blank'>Test Employees Page</a><br>";
 echo "<a href='index.php?v=Leads' target='_blank'>Test Leads/Clients Page</a><br>";
+echo "<a href='index.php?v=ChatTask&task=1&debug=1' target='_blank'>Test Task Chat (with debug info)</a><br>";
+
+echo "<br><h3>Chat Debug Test:</h3>";
+$chatDebugQuery = "SELECT c.*, t.task as task_title FROM comments c LEFT JOIN task t ON c.taskId = t.id ORDER BY c.id DESC LIMIT 10";
+$result = $dbconnect->query($chatDebugQuery);
+if ($result && $result->num_rows > 0) {
+    echo "<table border='1' cellpadding='5'>";
+    echo "<tr><th>Comment ID</th><th>Task ID</th><th>User ID</th><th>Emp ID</th><th>Status</th><th>Message</th><th>Date</th></tr>";
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>{$row['id']}</td>";
+        echo "<td>{$row['taskId']}</td>";
+        echo "<td>{$row['userId']}</td>";
+        echo "<td>{$row['empId']}</td>";
+        echo "<td>{$row['status']}</td>";
+        echo "<td>" . substr($row['comment'], 0, 50) . "...</td>";
+        echo "<td>{$row['date']}</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else {
+    echo "No comments found in database";
+}
 
 echo "<br><h3>New Features Added:</h3>";
 echo "<ul>";
