@@ -38,10 +38,6 @@ function checkAuthentication() {
         
         // Invalid cookie, clear it
         setcookie('cmsUser', '', time() - 3600, '/');
-        
-        // Clear session if cookie was invalid
-        session_unset();
-        session_destroy();
     }
     
     return false;
