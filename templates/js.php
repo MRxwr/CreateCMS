@@ -144,7 +144,7 @@ function showEditModal(type, id) {
 // Form Templates
 function getLeadForm(data = {}) {
     return `
-        <form id="leadForm" onsubmit="submitForm(event, 'lead')">
+        <form id="leadForm" onsubmit="submitForm(event, 'leads')">
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
