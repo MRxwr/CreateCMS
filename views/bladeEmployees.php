@@ -5,7 +5,8 @@ if($userType != 0) {
     return;
 }
 
-$employees = selectDB("employees", "status = '0' ORDER BY id DESC");
+// Get employees using correct table name and status system
+$employees = selectDB("employee", "status = 0 ORDER BY id DESC"); // status 0 = active
 ?>
 
 <div class="container-fluid">
@@ -43,7 +44,7 @@ $employees = selectDB("employees", "status = '0' ORDER BY id DESC");
                     $activeTasks = 0;
                     if($employees) {
                         foreach($employees as $employee) {
-                            $activeTasks += getTotals("tasks", "to = {$employee['id']} AND status = 'DOING'");
+                            $activeTasks += getTotals("task", "to = {$employee['id']} AND status = 1"); // status 1 = in progress
                         }
                     }
                     ?>
@@ -60,7 +61,7 @@ $employees = selectDB("employees", "status = '0' ORDER BY id DESC");
                     $completedTasks = 0;
                     if($employees) {
                         foreach($employees as $employee) {
-                            $completedTasks += getTotals("tasks", "to = {$employee['id']} AND status = 'FINISHED'");
+                            $completedTasks += getTotals("task", "to = {$employee['id']} AND status = 2"); // status 2 = completed
                         }
                     }
                     ?>
@@ -79,8 +80,8 @@ $employees = selectDB("employees", "status = '0' ORDER BY id DESC");
                         $totalTasks = 0;
                         $totalCompleted = 0;
                         foreach($employees as $employee) {
-                            $empTotal = getTotals("tasks", "to = {$employee['id']} AND status != 'DELETED'");
-                            $empCompleted = getTotals("tasks", "to = {$employee['id']} AND status = 'FINISHED'");
+                            $empTotal = getTotals("task", "to = {$employee['id']} AND status != 2"); // not deleted
+                            $empCompleted = getTotals("task", "to = {$employee['id']} AND status = 2"); // completed
                             $totalTasks += $empTotal;
                             $totalCompleted += $empCompleted;
                         }
@@ -101,10 +102,10 @@ $employees = selectDB("employees", "status = '0' ORDER BY id DESC");
         <?php if($employees && is_array($employees)): ?>
             <?php foreach($employees as $employee): ?>
             <?php
-            // Get employee statistics
-            $totalTasks = getTotals("tasks", "to = {$employee['id']} AND status != 'DELETED'");
-            $completedTasks = getTotals("tasks", "to = {$employee['id']} AND status = 'FINISHED'");
-            $activeTasks = getTotals("tasks", "to = {$employee['id']} AND status = 'DOING'");
+            // Get employee statistics using correct table and status system
+            $totalTasks = getTotals("task", "to = {$employee['id']} AND status != 2"); // not deleted
+            $completedTasks = getTotals("task", "to = {$employee['id']} AND status = 2"); // completed  
+            $activeTasks = getTotals("task", "to = {$employee['id']} AND status = 1"); // in progress
             $productivity = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
             ?>
             <div class="col-lg-4 col-md-6 mb-4">
@@ -223,13 +224,13 @@ $employees = selectDB("employees", "status = '0' ORDER BY id DESC");
                             <tbody>
                                 <?php foreach($employees as $employee): ?>
                                 <?php
-                                $totalTasks = getTotals("tasks", "to = {$employee['id']} AND status != 'DELETED'");
-                                $completedTasks = getTotals("tasks", "to = {$employee['id']} AND status = 'FINISHED'");
-                                $activeTasks = getTotals("tasks", "to = {$employee['id']} AND status = 'DOING'");
+                                $totalTasks = getTotals("task", "to = {$employee['id']} AND status != 2"); // not deleted
+                                $completedTasks = getTotals("task", "to = {$employee['id']} AND status = 2"); // completed
+                                $activeTasks = getTotals("task", "to = {$employee['id']} AND status = 1"); // in progress
                                 $productivity = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
                                 
-                                // Get last activity (last task update)
-                                $lastActivity = selectDB2("MAX(date) as last_date", "tasks", "to = {$employee['id']}");
+                                // Get last activity (last task update) using correct table name
+                                $lastActivity = selectDB2("MAX(date) as last_date", "task", "to = {$employee['id']}");
                                 $lastDate = $lastActivity && $lastActivity[0]['last_date'] ? $lastActivity[0]['last_date'] : null;
                                 ?>
                                 <tr>

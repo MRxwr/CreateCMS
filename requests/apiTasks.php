@@ -11,19 +11,28 @@ try {
     switch($method) {
         case 'GET':
             if(isset($_GET['id'])) {
-                // Get single task with project and employee information
+                // Get single task with project and employee information using direct query
                 $taskId = (int)$_GET['id'];
-                $task = selectDB("task t LEFT JOIN project p ON t.projectId = p.id LEFT JOIN employee e ON t.to = e.id", "t.id = {$taskId}", "t.*, p.title as project_title, e.name as employee_name");
+                $task = [];
+                $query = "SELECT t.*, p.title as project_title, e.name as employee_name 
+                          FROM task t 
+                          LEFT JOIN project p ON t.projectId = p.id 
+                          LEFT JOIN employee e ON t.to = e.id 
+                          WHERE t.id = {$taskId}";
+                $result = $dbconnect->query($query);
+                if ($result && $result->num_rows > 0) {
+                    $task = $result->fetch_assoc();
+                }
                 
-                if($task && is_array($task) && count($task) > 0) {
+                if($task) {
                     $response['ok'] = true;
-                    $response['data'] = $task[0];
+                    $response['data'] = $task;
                 } else {
                     throw new Exception('Task not found');
                 }
             } else {
-                // Get all tasks with project and employee information
-                $whereClause = "t.status != 2"; // Assuming status 2 = deleted
+                // Get all tasks with project and employee information using direct query
+                $whereClause = "t.status != 2"; // status 2 = deleted
                 
                 // Apply filters if provided
                 if(isset($_GET['project']) && !empty($_GET['project'])) {
@@ -41,9 +50,21 @@ try {
                     $whereClause .= " AND t.status = {$status}";
                 }
                 
-                $tasks = selectDB("task t LEFT JOIN project p ON t.projectId = p.id LEFT JOIN employee e ON t.to = e.id", $whereClause . " ORDER BY t.id DESC", "t.*, p.title as project_title, e.name as employee_name");
+                $tasks = [];
+                $query = "SELECT t.*, p.title as project_title, e.name as employee_name 
+                          FROM task t 
+                          LEFT JOIN project p ON t.projectId = p.id 
+                          LEFT JOIN employee e ON t.to = e.id 
+                          WHERE {$whereClause} 
+                          ORDER BY t.id DESC";
+                $result = $dbconnect->query($query);
+                if ($result && $result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $tasks[] = $row;
+                    }
+                }
                 $response['ok'] = true;
-                $response['data'] = $tasks ?: [];
+                $response['data'] = $tasks;
             }
             break;
             

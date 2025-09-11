@@ -1,5 +1,6 @@
 <?php
-$projects = selectDB("projects", "status = '1' ORDER BY id DESC");
+// Get projects using correct table name and status system
+$projects = selectDB("project", "status != 2 ORDER BY id DESC"); // status 2 = deleted
 ?>
 
 <div class="container-fluid">
@@ -23,14 +24,23 @@ $projects = selectDB("projects", "status = '1' ORDER BY id DESC");
         <?php if($projects && is_array($projects)): ?>
             <?php foreach($projects as $project): ?>
             <?php
-            // Get project statistics
-            $totalTasks = getTotals("tasks", "projectId = {$project['id']} AND status != 'DELETED'");
-            $completedTasks = getTotals("tasks", "projectId = {$project['id']} AND status = 'FINISHED'");
+            // Get project statistics using correct table names and status
+            $totalTasks = getTotals("task", "projectId = {$project['id']} AND status != 2"); // not deleted
+            $completedTasks = getTotals("task", "projectId = {$project['id']} AND status = 2"); // completed
             $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
             
-            // Get team members
-            $teamMembers = selectDB2("DISTINCT employees.name", "tasks", "tasks.projectId = {$project['id']} AND tasks.to = employees.id");
-            $teamCount = $teamMembers ? count($teamMembers) : 0;
+            // Get team members using direct query
+            $teamMembers = [];
+            $query = "SELECT DISTINCT e.name FROM task t 
+                      JOIN employee e ON t.to = e.id 
+                      WHERE t.projectId = {$project['id']} AND t.status != 2";
+            $result = $dbconnect->query($query);
+            if ($result && $result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $teamMembers[] = $row;
+                }
+            }
+            $teamCount = count($teamMembers);
             ?>
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100 priority-<?php echo $project['priority'] ?? 'medium'; ?>">

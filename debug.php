@@ -88,4 +88,17 @@ if (function_exists('selectDB')) {
 
 echo "<br><br><h3>Testing API Dashboard:</h3>";
 echo "<a href='requests/apiDashboard.php' target='_blank'>Test API Dashboard (opens in new tab)</a><br><br>";
+
+echo "<h3>Testing Other APIs:</h3>";
+echo "<a href='requests/apiTasks.php' target='_blank'>Test Tasks API</a><br>";
+echo "<a href='requests/apiProjects.php' target='_blank'>Test Projects API</a><br>";
+echo "<a href='requests/apiEmployees.php' target='_blank'>Test Employees API</a><br>";
+echo "<a href='requests/apiLeads.php' target='_blank'>Test Leads/Clients API</a><br>";
+echo "<a href='requests/apiComments.php?taskId=1' target='_blank'>Test Comments API (Task ID 1)</a><br><br>";
+
+echo "<h3>Testing Other Pages:</h3>";
+echo "<a href='index.php?v=Tasks' target='_blank'>Test Tasks Page</a><br>";
+echo "<a href='index.php?v=Projects' target='_blank'>Test Projects Page</a><br>";
+echo "<a href='index.php?v=Employees' target='_blank'>Test Employees Page</a><br>";
+echo "<a href='index.php?v=Leads' target='_blank'>Test Leads/Clients Page</a><br>";
 ?>

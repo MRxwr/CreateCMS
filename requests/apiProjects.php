@@ -11,21 +11,40 @@ try {
     switch($method) {
         case 'GET':
             if(isset($_GET['id'])) {
-                // Get single project with client info
+                // Get single project with client info using direct query
                 $projectId = (int)$_GET['id'];
-                $project = selectDB("project p LEFT JOIN client c ON p.clientId = c.id", "p.id = {$projectId}", "p.*, c.name as clientName, c.company as clientCompany");
+                $project = [];
+                $query = "SELECT p.*, c.name as clientName, c.company as clientCompany 
+                          FROM project p 
+                          LEFT JOIN client c ON p.clientId = c.id 
+                          WHERE p.id = {$projectId}";
+                $result = $dbconnect->query($query);
+                if ($result && $result->num_rows > 0) {
+                    $project = $result->fetch_assoc();
+                }
                 
-                if($project && is_array($project) && count($project) > 0) {
+                if($project) {
                     $response['ok'] = true;
-                    $response['data'] = $project[0];
+                    $response['data'] = $project;
                 } else {
                     throw new Exception('Project not found');
                 }
             } else {
-                // Get all projects with client info
-                $projects = selectDB("project p LEFT JOIN client c ON p.clientId = c.id", "1=1 ORDER BY p.id DESC", "p.*, c.name as clientName, c.company as clientCompany");
+                // Get all projects with client info using direct query
+                $projects = [];
+                $query = "SELECT p.*, c.name as clientName, c.company as clientCompany 
+                          FROM project p 
+                          LEFT JOIN client c ON p.clientId = c.id 
+                          WHERE p.status != 2 
+                          ORDER BY p.id DESC";
+                $result = $dbconnect->query($query);
+                if ($result && $result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $projects[] = $row;
+                    }
+                }
                 $response['ok'] = true;
-                $response['data'] = $projects ?: [];
+                $response['data'] = $projects;
             }
             break;
             

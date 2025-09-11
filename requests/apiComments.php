@@ -20,10 +20,20 @@ try {
                     throw new Exception('Task not found');
                 }
                 
-                // Get comments with user information
-                $comments = selectDB("comments c LEFT JOIN user u ON c.userId = u.id LEFT JOIN employee e ON c.empId = e.id", 
-                    "c.taskId = {$taskId} AND c.status = 1 ORDER BY c.id ASC", 
-                    "c.*, COALESCE(u.name, e.name) as user_name, COALESCE(u.username, e.username) as username");
+                // Get comments with user information using direct query
+                $comments = [];
+                $query = "SELECT c.*, COALESCE(u.name, e.name) as user_name, COALESCE(u.username, e.username) as username 
+                          FROM comments c 
+                          LEFT JOIN user u ON c.userId = u.id 
+                          LEFT JOIN employee e ON c.empId = e.id 
+                          WHERE c.taskId = {$taskId} AND c.status = 1 
+                          ORDER BY c.id ASC";
+                $result = $dbconnect->query($query);
+                if ($result && $result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $comments[] = $row;
+                    }
+                }
                 
                 $response['ok'] = true;
                 $response['data'] = $comments ?: [];

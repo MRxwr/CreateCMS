@@ -1,22 +1,50 @@
 <?php
-// Get tasks with project and employee information
-$whereClause = "tasks.status != 'DELETED'";
+// Get tasks with project and employee information using your live database structure
+$whereClause = "t.status != 2"; // status 2 = deleted in your numeric system
 if(isset($_GET['project']) && !empty($_GET['project'])) {
     $projectId = (int)$_GET['project'];
-    $whereClause .= " AND tasks.projectId = {$projectId}";
+    $whereClause .= " AND t.projectId = {$projectId}";
 }
 
-$joinData = [
-    "select" => ["tasks.*", "projects.title as project_title", "employees.name as employee_name"],
-    "join" => ["projects", "employees"],
-    "on" => ["tasks.projectId = projects.id", "tasks.to = employees.id"]
-];
+// Use direct query since selectJoinDBNew might have issues
+$tasks = [];
+$query = "SELECT t.*, p.title as project_title, e.name as employee_name 
+          FROM task t 
+          LEFT JOIN project p ON t.projectId = p.id 
+          LEFT JOIN employee e ON t.to = e.id 
+          WHERE {$whereClause} 
+          ORDER BY t.id DESC";
+$result = $dbconnect->query($query);
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $tasks[] = $row;
+    }
+}
 
-$tasks = selectJoinDBNew("tasks", $joinData, $whereClause, [], "tasks.id DESC");
+// Get projects and employees for filters using correct table names
+$projects = selectDB("project", "status != 2"); // not deleted
+$employees = selectDB("employee", "status = 0"); // active employees
 
-// Get projects and employees for filters
-$projects = selectDB("projects", "status = '1'");
-$employees = selectDB("employees", "status = '0'");
+// Status helper functions
+function getTaskStatusLabel($status) {
+    switch((int)$status) {
+        case 0: return 'Pending';
+        case 1: return 'In Progress'; 
+        case 2: return 'Completed';
+        case 3: return 'On Hold';
+        default: return 'Unknown';
+    }
+}
+
+function getTaskStatusClass($status) {
+    switch((int)$status) {
+        case 0: return 'warning';
+        case 1: return 'info';
+        case 2: return 'success';
+        case 3: return 'secondary';
+        default: return 'secondary';
+    }
+}
 ?>
 
 <div class="container-fluid">
@@ -99,7 +127,7 @@ $employees = selectDB("employees", "status = '0'");
                             $completedTasks = 0;
                             if($tasks) {
                                 foreach($tasks as $task) {
-                                    if($task['status'] == 'FINISHED') $completedTasks++;
+                                    if($task['status'] == 2) $completedTasks++; // status 2 = completed
                                 }
                             }
                             ?>
@@ -139,12 +167,24 @@ $employees = selectDB("employees", "status = '0'");
                 <div class="card-header bg-warning text-dark">
                     <h6 class="mb-0">
                         <i class="bi bi-clock"></i> Pending
-                        <span class="badge bg-dark ms-2"><?php echo count(array_filter($tasks ?: [], function($t) { return $t['status'] == 'PENDING'; })); ?></span>
+                        <span class="badge bg-dark ms-2"><?php echo count(array_filter($tasks ?: [], function($t) { return $t['status'] == 0; })); ?></span>
                     </h6>
                 </div>
                 <div class="card-body p-2" style="max-height: 600px; overflow-y: auto;">
-                    <?php if($tasks): foreach($tasks as $task): if($task['status'] == 'PENDING'): ?>
-                        <?php include 'includes/task-card.php'; ?>
+                    <?php if($tasks): foreach($tasks as $task): if($task['status'] == 0): ?>
+                        <div class="card mb-2 task-card" data-task-id="<?php echo $task['id']; ?>">
+                            <div class="card-body p-2">
+                                <h6 class="card-title"><?php echo htmlspecialchars($task['task']); ?></h6>
+                                <p class="card-text small text-muted">
+                                    Project: <?php echo htmlspecialchars($task['project_title'] ?? 'No Project'); ?><br>
+                                    Assigned: <?php echo htmlspecialchars($task['employee_name'] ?? 'Unassigned'); ?><br>
+                                    Due: <?php echo date('M d, Y', strtotime($task['expected'] ?? '')); ?>
+                                </p>
+                                <span class="badge bg-<?php echo getTaskStatusClass($task['status']); ?>">
+                                    <?php echo getTaskStatusLabel($task['status']); ?>
+                                </span>
+                            </div>
+                        </div>
                     <?php endif; endforeach; endif; ?>
                 </div>
             </div>
@@ -156,12 +196,24 @@ $employees = selectDB("employees", "status = '0'");
                 <div class="card-header bg-info text-white">
                     <h6 class="mb-0">
                         <i class="bi bi-arrow-clockwise"></i> In Progress
-                        <span class="badge bg-dark ms-2"><?php echo count(array_filter($tasks ?: [], function($t) { return $t['status'] == 'DOING'; })); ?></span>
+                        <span class="badge bg-dark ms-2"><?php echo count(array_filter($tasks ?: [], function($t) { return $t['status'] == 1; })); ?></span>
                     </h6>
                 </div>
                 <div class="card-body p-2" style="max-height: 600px; overflow-y: auto;">
-                    <?php if($tasks): foreach($tasks as $task): if($task['status'] == 'DOING'): ?>
-                        <?php include 'includes/task-card.php'; ?>
+                    <?php if($tasks): foreach($tasks as $task): if($task['status'] == 1): ?>
+                        <div class="card mb-2 task-card" data-task-id="<?php echo $task['id']; ?>">
+                            <div class="card-body p-2">
+                                <h6 class="card-title"><?php echo htmlspecialchars($task['task']); ?></h6>
+                                <p class="card-text small text-muted">
+                                    Project: <?php echo htmlspecialchars($task['project_title'] ?? 'No Project'); ?><br>
+                                    Assigned: <?php echo htmlspecialchars($task['employee_name'] ?? 'Unassigned'); ?><br>
+                                    Due: <?php echo date('M d, Y', strtotime($task['expected'] ?? '')); ?>
+                                </p>
+                                <span class="badge bg-<?php echo getTaskStatusClass($task['status']); ?>">
+                                    <?php echo getTaskStatusLabel($task['status']); ?>
+                                </span>
+                            </div>
+                        </div>
                     <?php endif; endforeach; endif; ?>
                 </div>
             </div>
@@ -173,29 +225,55 @@ $employees = selectDB("employees", "status = '0'");
                 <div class="card-header bg-success text-white">
                     <h6 class="mb-0">
                         <i class="bi bi-check-circle"></i> Completed
-                        <span class="badge bg-dark ms-2"><?php echo count(array_filter($tasks ?: [], function($t) { return $t['status'] == 'FINISHED'; })); ?></span>
+                        <span class="badge bg-dark ms-2"><?php echo count(array_filter($tasks ?: [], function($t) { return $t['status'] == 2; })); ?></span>
                     </h6>
                 </div>
                 <div class="card-body p-2" style="max-height: 600px; overflow-y: auto;">
-                    <?php if($tasks): foreach($tasks as $task): if($task['status'] == 'FINISHED'): ?>
-                        <?php include 'includes/task-card.php'; ?>
+                    <?php if($tasks): foreach($tasks as $task): if($task['status'] == 2): ?>
+                        <div class="card mb-2 task-card" data-task-id="<?php echo $task['id']; ?>">
+                            <div class="card-body p-2">
+                                <h6 class="card-title"><?php echo htmlspecialchars($task['task']); ?></h6>
+                                <p class="card-text small text-muted">
+                                    Project: <?php echo htmlspecialchars($task['project_title'] ?? 'No Project'); ?><br>
+                                    Assigned: <?php echo htmlspecialchars($task['employee_name'] ?? 'Unassigned'); ?><br>
+                                    Due: <?php echo date('M d, Y', strtotime($task['expected'] ?? '')); ?>
+                                </p>
+                                <span class="badge bg-<?php echo getTaskStatusClass($task['status']); ?>">
+                                    <?php echo getTaskStatusLabel($task['status']); ?>
+                                </span>
+                            </div>
+                        </div>
                     <?php endif; endforeach; endif; ?>
                 </div>
             </div>
         </div>
+            </div>
+        </div>
 
-        <!-- Returned Column -->
+        <!-- Returned/On Hold Column -->
         <div class="col-lg-3 col-md-6 mb-4">
             <div class="card border-danger">
                 <div class="card-header bg-danger text-white">
                     <h6 class="mb-0">
-                        <i class="bi bi-arrow-return-left"></i> Returned
-                        <span class="badge bg-dark ms-2"><?php echo count(array_filter($tasks ?: [], function($t) { return $t['status'] == 'RETURNED'; })); ?></span>
+                        <i class="bi bi-arrow-return-left"></i> On Hold
+                        <span class="badge bg-dark ms-2"><?php echo count(array_filter($tasks ?: [], function($t) { return $t['status'] == 3; })); ?></span>
                     </h6>
                 </div>
                 <div class="card-body p-2" style="max-height: 600px; overflow-y: auto;">
-                    <?php if($tasks): foreach($tasks as $task): if($task['status'] == 'RETURNED'): ?>
-                        <?php include 'includes/task-card.php'; ?>
+                    <?php if($tasks): foreach($tasks as $task): if($task['status'] == 3): ?>
+                        <div class="card mb-2 task-card" data-task-id="<?php echo $task['id']; ?>">
+                            <div class="card-body p-2">
+                                <h6 class="card-title"><?php echo htmlspecialchars($task['task']); ?></h6>
+                                <p class="card-text small text-muted">
+                                    Project: <?php echo htmlspecialchars($task['project_title'] ?? 'No Project'); ?><br>
+                                    Assigned: <?php echo htmlspecialchars($task['employee_name'] ?? 'Unassigned'); ?><br>
+                                    Due: <?php echo date('M d, Y', strtotime($task['expected'] ?? '')); ?>
+                                </p>
+                                <span class="badge bg-<?php echo getTaskStatusClass($task['status']); ?>">
+                                    <?php echo getTaskStatusLabel($task['status']); ?>
+                                </span>
+                            </div>
+                        </div>
                     <?php endif; endforeach; endif; ?>
                 </div>
             </div>

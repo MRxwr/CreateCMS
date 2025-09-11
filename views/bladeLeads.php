@@ -1,5 +1,6 @@
 <?php
-$leads = selectDB("leads", "status = '1' ORDER BY id DESC");
+// Get leads from client table (your database structure uses client table for leads/customers)
+$leads = selectDB("client", "status != 2 ORDER BY id DESC"); // status 2 = deleted
 ?>
 
 <div class="container-fluid">

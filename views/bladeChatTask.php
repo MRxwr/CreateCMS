@@ -7,14 +7,18 @@ if(!isset($_GET['task']) || empty($_GET['task'])) {
 
 $taskId = (int)$_GET['task'];
 
-// Get task details with project and employee information
-$joinData = [
-    "select" => ["tasks.*", "projects.title as project_title", "employees.name as employee_name", "users.username as creator_name"],
-    "join" => ["projects", "employees", "users"],
-    "on" => ["tasks.projectId = projects.id", "tasks.to = employees.id", "tasks.by = users.id"]
-];
-
-$taskDetails = selectJoinDBNew("tasks", $joinData, "tasks.id = {$taskId}", []);
+// Get task details with project and employee information using direct query
+$taskDetails = [];
+$query = "SELECT t.*, p.title as project_title, e.name as employee_name, u.username as creator_name 
+          FROM task t 
+          LEFT JOIN project p ON t.projectId = p.id 
+          LEFT JOIN employee e ON t.to = e.id 
+          LEFT JOIN user u ON t.by = u.id 
+          WHERE t.id = {$taskId}";
+$result = $dbconnect->query($query);
+if ($result && $result->num_rows > 0) {
+    $taskDetails[] = $result->fetch_assoc();
+}
 
 if(!$taskDetails || !is_array($taskDetails) || count($taskDetails) == 0) {
     echo '<div class="alert alert-danger">Task not found.</div>';
@@ -23,7 +27,7 @@ if(!$taskDetails || !is_array($taskDetails) || count($taskDetails) == 0) {
 
 $task = $taskDetails[0];
 
-// Get chat messages (comments)
+// Get chat messages (comments) - using correct table name
 $comments = selectDB("comments", "taskId = {$taskId} ORDER BY id ASC");
 ?>
 
