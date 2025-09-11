@@ -1,6 +1,11 @@
 <?php
 // Note: Authentication is handled in index.php before including this file
 // Global variables available: $userId, $userType, $username, $currentUser
+
+// Legacy variable assignments for backward compatibility
+$userId = $currentUser['id'];
+$userType = $currentUser['type']; 
+$username = $currentUser['username'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
