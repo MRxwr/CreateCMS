@@ -166,7 +166,7 @@ try {
                 $response['ok'] = true;
                 $response['data'] = ['message' => 'Client updated successfully'];
             } else {
-                throw new Exception('Failed to update client');
+                throw new Exception('Failed to update client'); 
             }
             break;
             
