@@ -339,7 +339,6 @@ function updateDB($table, $data, $where) {
     if ($stmt->execute()) {
         return 1;
     } else {
-        $error = array("msg" => "update table error");
         return 0;
     }
 }
