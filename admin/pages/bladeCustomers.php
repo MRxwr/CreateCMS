@@ -54,13 +54,13 @@ if ( isset($_GET["return"]) ){
 		<?php
 		// Use the new secure join function with placeholders for better security
 		$joinData = array(
-			"select" => array("c.*", "u.username"),
+			"select" => array("t.*", "t1.username"),
 			"join" => array("user"),
-			"on" => array("c.userId = u.id")
+			"on" => array("t.userId = t1.id")
 		);
-		$where = "c.type = ?";
+		$where = "t.type = ?";
 		$placeholders = array($typeOfCustomer[$i]);
-		$order = "c.date DESC"; // Order by date descending
+		$order = "t.date DESC"; // Order by date descending
 		$results = selectJoinDBNew("client", $joinData, $where, $placeholders, $order);
 		if($results){
 			foreach($results as $row){
