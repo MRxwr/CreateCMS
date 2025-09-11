@@ -148,25 +148,68 @@ echo "<a href='index.php?v=Leads' target='_blank'>Test Leads/Clients Page</a><br
 echo "<a href='index.php?v=ChatTask&task=1&debug=1' target='_blank'>Test Task Chat (with debug info)</a><br>";
 
 echo "<br><h3>Chat Debug Test:</h3>";
-$chatDebugQuery = "SELECT c.*, t.task as task_title FROM comments c LEFT JOIN task t ON c.taskId = t.id ORDER BY c.id DESC LIMIT 10";
+
+// First check if comments table exists and its structure
+$structureQuery = "DESCRIBE comments";
+$structureResult = $dbconnect->query($structureQuery);
+if ($structureResult) {
+    echo "<h4>Comments Table Structure:</h4>";
+    echo "<table border='1' cellpadding='3'>";
+    echo "<tr><th>Field</th><th>Type</th><th>Null</th><th>Key</th><th>Default</th></tr>";
+    while ($field = $structureResult->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>" . $field['Field'] . "</td>";
+        echo "<td>" . $field['Type'] . "</td>";
+        echo "<td>" . $field['Null'] . "</td>";
+        echo "<td>" . $field['Key'] . "</td>";
+        echo "<td>" . $field['Default'] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table><br>";
+}
+
+// Check total count
+$countQuery = "SELECT COUNT(*) as total FROM comments";
+$countResult = $dbconnect->query($countQuery);
+if ($countResult) {
+    $count = $countResult->fetch_assoc();
+    echo "<p><strong>Total Comments in Database: " . $count['total'] . "</strong></p>";
+}
+
+// Get actual comments with correct column name
+$chatDebugQuery = "SELECT c.*, t.task as task_title, u.username as user_name, e.name as emp_name 
+                   FROM comments c 
+                   LEFT JOIN task t ON c.taskId = t.id 
+                   LEFT JOIN user u ON c.userId = u.id
+                   LEFT JOIN employee e ON c.empId = e.id
+                   ORDER BY c.id DESC LIMIT 10";
 $result = $dbconnect->query($chatDebugQuery);
+
 if ($result && $result->num_rows > 0) {
+    echo "<h4>Recent Comments (Last 10):</h4>";
     echo "<table border='1' cellpadding='5'>";
-    echo "<tr><th>Comment ID</th><th>Task ID</th><th>User ID</th><th>Emp ID</th><th>Status</th><th>Message</th><th>Date</th></tr>";
+    echo "<tr><th>ID</th><th>Date</th><th>Task ID</th><th>User ID</th><th>Emp ID</th><th>Message</th><th>Type</th><th>Status</th><th>User Name</th><th>Emp Name</th><th>Task Title</th></tr>";
     while ($row = $result->fetch_assoc()) {
         echo "<tr>";
         echo "<td>{$row['id']}</td>";
+        echo "<td>{$row['date']}</td>";
         echo "<td>{$row['taskId']}</td>";
         echo "<td>{$row['userId']}</td>";
         echo "<td>{$row['empId']}</td>";
+        echo "<td>" . htmlspecialchars(substr($row['send-msg'], 0, 50)) . "...</td>";
+        echo "<td>{$row['type']}</td>";
         echo "<td>{$row['status']}</td>";
-        echo "<td>" . substr($row['comment'], 0, 50) . "...</td>";
-        echo "<td>{$row['date']}</td>";
+        echo "<td>" . ($row['user_name'] ?? 'N/A') . "</td>";
+        echo "<td>" . ($row['emp_name'] ?? 'N/A') . "</td>";
+        echo "<td>" . ($row['task_title'] ?? 'N/A') . "</td>";
         echo "</tr>";
     }
     echo "</table>";
 } else {
-    echo "No comments found in database";
+    echo "<p style='color: red;'>No comments found in database</p>";
+    if ($dbconnect->error) {
+        echo "<p style='color: red;'>MySQL Error: " . $dbconnect->error . "</p>";
+    }
 }
 
 echo "<br><h3>New Features Added:</h3>";

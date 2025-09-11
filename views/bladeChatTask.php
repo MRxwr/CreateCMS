@@ -27,19 +27,18 @@ if(!$taskDetails || !is_array($taskDetails) || count($taskDetails) == 0) {
 
 $task = $taskDetails[0];
 
-// Get chat messages (comments) - using correct table name
-$comments = selectDB("comments", "taskId = {$taskId} AND status = 1 ORDER BY id ASC");
-
-// Debug: Add some debug info
-if (!$comments || !is_array($comments)) {
-    $comments = [];
-    // Let's also try a direct query to see if there are any comments
-    $debugQuery = "SELECT * FROM comments WHERE taskId = {$taskId} ORDER BY id ASC";
-    $result = $dbconnect->query($debugQuery);
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $comments[] = $row;
-        }
+// Get chat messages (comments) - using direct query like in admin bladeComments
+$comments = [];
+$sql = "SELECT c.*, u.username as User, u.name as UserName, e.username as EmpUser, e.name as EmpName
+        FROM `comments` as c
+        LEFT JOIN `user` as u ON c.userId = u.id
+        LEFT JOIN `employee` as e ON c.empId = e.id
+        WHERE c.taskId = {$taskId}
+        ORDER BY c.id ASC";
+$result = $dbconnect->query($sql);
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $comments[] = $row;
     }
 }
 ?>
@@ -196,32 +195,22 @@ if (!$comments || !is_array($comments)) {
                         <?php if($comments && is_array($comments)): ?>
                             <?php foreach($comments as $comment): ?>
                             <?php
-                            // Get user info for the comment - check both userId and empId
+                            // Determine sender name and ownership like in admin bladeComments
                             $senderName = 'Unknown';
-                            $senderId = null;
-                            
-                            if(!empty($comment['userId'])) {
-                                // Comment from user
-                                $commentUser = selectDB("user", "id = {$comment['userId']}");
-                                if($commentUser && is_array($commentUser) && count($commentUser) > 0) {
-                                    $senderName = $commentUser[0]['username'] ?? $commentUser[0]['name'] ?? 'User';
-                                    $senderId = $comment['userId'];
-                                }
-                            } elseif(!empty($comment['empId'])) {
-                                // Comment from employee
-                                $commentEmployee = selectDB("employee", "id = {$comment['empId']}");
-                                if($commentEmployee && is_array($commentEmployee) && count($commentEmployee) > 0) {
-                                    $senderName = $commentEmployee[0]['name'] ?? $commentEmployee[0]['username'] ?? 'Employee';
-                                    $senderId = $comment['empId'];
-                                }
-                            }
-                            
-                            // Check if this is the current user's message
                             $isOwn = false;
-                            if($userType == 0) { // Admin/User
-                                $isOwn = !empty($comment['userId']) && $comment['userId'] == $userId;
-                            } else { // Employee
-                                $isOwn = !empty($comment['empId']) && $comment['empId'] == $userId;
+                            
+                            if (!empty($comment["User"])) {
+                                $senderName = $comment["User"];
+                                $isOwn = ($userType == 0 && $userId == $comment["userId"]);
+                            } else if (!empty($comment["EmpUser"])) {
+                                $senderName = $comment["EmpUser"];
+                                $isOwn = ($userType == 1 && $userId == $comment["empId"]);
+                            } else if (!empty($comment["UserName"])) {
+                                $senderName = $comment["UserName"];
+                                $isOwn = ($userType == 0 && $userId == $comment["userId"]);
+                            } else if (!empty($comment["EmpName"])) {
+                                $senderName = $comment["EmpName"];
+                                $isOwn = ($userType == 1 && $userId == $comment["empId"]);
                             }
                             ?>
                             <div class="chat-message <?php echo $isOwn ? 'own' : 'other'; ?> mb-3">
@@ -235,11 +224,9 @@ if (!$comments || !is_array($comments)) {
                                         </div>
                                         <?php endif; ?>
                                         
-                                        <div class="content">
-                                            <?php echo nl2br(htmlspecialchars($comment['comment'])); ?>
-                                        </div>
-                                        
-                                        <div class="time mt-2">
+                        <div class="content">
+                            <?php echo nl2br(htmlspecialchars($comment['send-msg'])); ?>
+                        </div>                                        <div class="time mt-2">
                                             <small style="opacity: 0.7; font-size: 0.75rem;">
                                                 <?php echo date('M d, Y - H:i', strtotime($comment['date'])); ?>
                                             </small>
@@ -344,8 +331,7 @@ async function sendMessage(event, taskId) {
             method: 'POST',
             body: JSON.stringify({
                 taskId: taskId,
-                comment: message,
-                userId: currentUser.id
+                comment: message
             })
         });
         
