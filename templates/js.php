@@ -305,7 +305,8 @@ function getTaskForm(data = {}) {
 
 function getEmployeeForm(data = {}) {
     return `
-        <form id="employeeForm" onsubmit="submitForm(event, 'employees')">">
+        <form id="employeeForm" onsubmit="submitForm(event, 'employees')">
+            ${data.id ? `<input type="hidden" name="id" value="${data.id}">` : ''}
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
