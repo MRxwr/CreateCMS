@@ -141,6 +141,37 @@ function showEditModal(type, id) {
     modal.show();
 }
 
+// Function to get form for editing entities
+async function getEditForm(type, id) {
+    try {
+        // Load the entity data
+        const response = await makeRequest(`requests/api${type.charAt(0).toUpperCase() + type.slice(1)}.php?id=${id}`);
+        
+        if (!response.ok || !response.data) {
+            throw new Error('Failed to load data');
+        }
+        
+        const data = response.data;
+        
+        // Return the appropriate form with the data
+        switch(type) {
+            case 'lead':
+                return getLeadForm(data);
+            case 'project':
+                return getProjectForm(data);
+            case 'task':
+                return getTaskForm(data);
+            case 'employee':
+                return getEmployeeForm(data);
+            default:
+                throw new Error('Unknown entity type');
+        }
+    } catch (error) {
+        showToast(`Error loading ${type}: ${error.message}`, 'danger');
+        return `<div class="alert alert-danger">Failed to load ${type} data. Please try again.</div>`;
+    }
+}
+
 // Form Templates
 function getLeadForm(data = {}) {
     return `
@@ -200,11 +231,10 @@ function getProjectForm(data = {}) {
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Client *</label>
-                        <select class="form-control" name="clientId" required>
+                        <select class="form-control" name="clientId" required data-selected="${data.clientId || ''}">
                             <option value="">Select Client</option>
                             <!-- Clients will be loaded dynamically -->
                         </select>
-                        ${data.clientId ? `<script>setTimeout(() => document.querySelector('select[name="clientId"]').value = '${data.clientId}', 100);</script>` : ''}
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -236,7 +266,8 @@ function getProjectForm(data = {}) {
 
 function getTaskForm(data = {}) {
     return `
-        <form id="taskForm" onsubmit="submitForm(event, 'tasks')">">
+        <form id="taskForm" onsubmit="submitForm(event, 'tasks')">
+            ${data.id ? `<input type="hidden" name="id" value="${data.id}">` : ''}
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -546,6 +577,7 @@ function updateSelectOptions(selectName, data, valueField = 'id', textField = 't
     selects.forEach(select => {
         // Keep the first option (placeholder)
         const firstOption = select.querySelector('option');
+        const selectedValue = select.getAttribute('data-selected');
         select.innerHTML = '';
         if (firstOption) {
             select.appendChild(firstOption);
@@ -555,6 +587,9 @@ function updateSelectOptions(selectName, data, valueField = 'id', textField = 't
             const option = document.createElement('option');
             option.value = item[valueField];
             option.textContent = item[textField];
+            if (selectedValue && item[valueField].toString() === selectedValue.toString()) {
+                option.selected = true;
+            }
             select.appendChild(option);
         });
     });
