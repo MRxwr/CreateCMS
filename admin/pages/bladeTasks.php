@@ -17,7 +17,7 @@ if ( isset($_POST["task"]) ){
 	whatsappUltraMsg($user[0]["phone"],$Msg);
 	$Msg = "New Task Created:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$_POST["task"]."\nAssigned By: ".$username."\nAssigned To: ".$user[0]["name"]."\nExpected Date: ".substr($_POST["expected"], 0, 10);
 	whatsappUltraMsg($userPhone,$Msg);
-	header("Location: ?p=Tasks");die();
+	echo "<script>window.location='?p=Tasks'</script>";die();
 }
 if ( isset($_GET["doing"]) ){
 	$table = "task";
@@ -29,13 +29,11 @@ if ( isset($_GET["doing"]) ){
 	$employee = selectDB("employee","`id` LIKE '".$taskDetails[0]["to"]."'");
 	$user = selectDB("user","`id` LIKE '".$taskDetails[0]["by"]."'");
 	$project = selectDB("project","`id` LIKE '".$taskDetails[0]["projectId"]."'");
-    /*
 	$Msg = "Task Started:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nStart Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($employee[0]["phone"],$Msg);
 	$Msg = "Task Started:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nStart Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
-    */
-	echo "<script>window.location='index?p=Tasks'</script>";die();
+	echo "<script>window.location='?p=Tasks'</script>";die();
 }
 if ( isset($_GET["done"]) ){
 	$table = "task";
@@ -51,7 +49,7 @@ if ( isset($_GET["done"]) ){
 	whatsappUltraMsg($employee[0]["phone"],$Msg);
 	$Msg = "Task Finished:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nFinish Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
-	header("Location: ?p=Tasks");die();
+	echo "<script>window.location='?p=Tasks'</script>";die();
 }
 if ( isset($_GET["return"]) ){
 	$table = "task";
@@ -67,7 +65,7 @@ if ( isset($_GET["return"]) ){
 	whatsappUltraMsg($employee[0]["phone"],$Msg);
 	$Msg = "Task Returned:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
-	header("Location: ?p=Tasks");die();
+	echo "<script>window.location='?p=Tasks'</script>";die();
 }
 if ( isset($_GET["delete"]) ){
 	$table = "task";
@@ -83,7 +81,7 @@ if ( isset($_GET["delete"]) ){
 	whatsappUltraMsg($employee[0]["phone"],$Msg);
 	$Msg = "Task Deleted:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
-    header("Location: ?p=Tasks");die();
+    echo "<script>window.location='?p=Tasks'</script>";die();
 }
 ?>
 <!-- /Title -->
