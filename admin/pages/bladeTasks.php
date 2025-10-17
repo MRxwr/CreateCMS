@@ -35,7 +35,7 @@ if ( isset($_GET["doing"]) ){
 	$Msg = "Task Started:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nStart Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
     */
-	header("Location: index?p=Tasks");die();
+	echo "<script>window.location='index?p=Tasks'</script>";die();
 }
 if ( isset($_GET["done"]) ){
 	$table = "task";
