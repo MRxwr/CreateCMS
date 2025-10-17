@@ -249,9 +249,9 @@ $sql = "SELECT t.*, u.username, e.name
 		ON u.id = t.by
 		JOIN `employee` as e
 		ON e.id = t.to
+        JOIN `project` as p
+		ON p.id = t.projectId
 		WHERE
-		t.projectId LIKE '".$_GET['pid']."'
-		AND
 		t.status LIKE '".$status[$i]."'
 		";
 $result = $dbconnect->query($sql);
@@ -276,16 +276,16 @@ if ( !empty($row["file"]) ){
 </td>
 <td>
 <?php if ( $status[$i] == '0' ){  ?>
-<a href="?p=Details<?php echo "&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]."&doing=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Doing"><i class="fa fa-circle-o-notch"></i></a>
+<a href="?p=Tasks<?php echo "&doing=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Doing"><i class="fa fa-circle-o-notch"></i></a>
 <?php }if ( $status[$i] != '2' ){  ?>
-<a href="?p=Details<?php echo "&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]."&done=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Done"><i class="fa fa-check"></i></a>
+<a href="?p=Tasks<?php echo "&done=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Done"><i class="fa fa-check"></i></a>
 <?php }if ( $status[$i] != '0' ){  ?>
-<a href="?p=Details<?php echo "&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]."&return=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Pending"><i class="fa fa-refresh"></i></a>
+<a href="?p=Tasks&return=<?php echo $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Pending"><i class="fa fa-refresh"></i></a>
 <?php } ?>
 
 <a href="?p=Comments<?php echo "&id=".$row["id"]."&pid=".$_GET["pid"] ?>" style="margin:3px" data-toggle="tooltip" title="Comment"><i class="fa fa-comments"></i></a>
 
-<a href="?p=Details<?php echo "&id=".$_GET["id"]."&pid=".$_GET["pid"]."&a=".$_GET["a"]."&delete=" . $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Delete"><i class="fa fa-trash"></i></a>
+<a href="?p=Tasks&delete=<?php echo $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Delete"><i class="fa fa-trash"></i></a>
 
 </td>
 </tr>
