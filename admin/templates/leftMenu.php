@@ -36,11 +36,29 @@ if ( $userType == 0 ){
 				<div class="pull-right"></div>
 				<div class="clearfix"></div>
 			</a>
+
+			<a class="<?php echo ($currentPage == 'Projects') ? 'active' : ''; ?>" href="?p=Projects" >
+				<div class="pull-left">
+					<i class="fa fa-user mr-20"></i>
+					<span class="right-nav-text">Projects</span>
+				</div>
+				<div class="pull-right"></div>
+				<div class="clearfix"></div>
+			</a>
+
+			<a class="<?php echo ($currentPage == 'Tasks') ? 'active' : ''; ?>" href="?p=Tasks" >
+				<div class="pull-left">
+					<i class="fa fa-user mr-20"></i>
+					<span class="right-nav-text">Tasks</span>
+				</div>
+				<div class="pull-right"></div>
+				<div class="clearfix"></div>
+			</a>
 			
 			<a class="<?php echo ($currentPage == 'Employees') ? 'active' : ''; ?>" href="?p=Employees" >
 				<div class="pull-left">
 					<i class="fa fa-user-md mr-20"></i>
-					<span class="right-nav-text">employees</span>
+					<span class="right-nav-text">Employees</span>
 				</div>
 				<div class="pull-right"></div>
 				<div class="clearfix"></div>
