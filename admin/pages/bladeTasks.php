@@ -283,9 +283,6 @@ if ( !empty($row["file"]) ){
 <?php }if ( $status[$i] != '0' ){  ?>
 <a href="?p=Tasks&return=<?php echo $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Pending"><i class="fa fa-refresh"></i></a>
 <?php } ?>
-
-<a href="?p=Comments<?php echo "&id=".$row["id"]."&pid=".$_GET["pid"] ?>" style="margin:3px" data-toggle="tooltip" title="Comment"><i class="fa fa-comments"></i></a>
-
 <a href="?p=Tasks&delete=<?php echo $row["id"] ?>" style="margin:3px" data-toggle="tooltip" title="Delete"><i class="fa fa-trash"></i></a>
 
 </td>

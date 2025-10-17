@@ -228,9 +228,6 @@ if ( !empty($row["file"]) ){
 ?>
 </td>
 <td>
-<a href="?p=Projects<?php echo "&id=".$_GET["id"]."&pid=".$row["id"]."&a=Tasks" ?>" style="margin:3px"><i class="fa fa-table"></i></a>
-
-<a href="?p=Projects<?php echo "&id=".$_GET["id"]."&a=Invoices&pid=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-credit-card-alt"></i></a>
 <?php if ( $status[$i] != '1' ){  ?>
 <a href="?p=Projects<?php echo "&done=" . $row["id"] ?>" style="margin:3px"><i class="fa fa-check"></i></a>
 <?php }if ( $status[$i] != '0' ){  ?>
