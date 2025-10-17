@@ -39,7 +39,7 @@ if ( $userType == 0 ){
 
 			<a class="<?php echo ($currentPage == 'Projects') ? 'active' : ''; ?>" href="?p=Projects" >
 				<div class="pull-left">
-					<i class="fa fa-user mr-20"></i>
+					<i class="fa fa-folder-open mr-20"></i>
 					<span class="right-nav-text">Projects</span>
 				</div>
 				<div class="pull-right"></div>
@@ -48,7 +48,7 @@ if ( $userType == 0 ){
 
 			<a class="<?php echo ($currentPage == 'Tasks') ? 'active' : ''; ?>" href="?p=Tasks" >
 				<div class="pull-left">
-					<i class="fa fa-user mr-20"></i>
+					<i class="fa fa-tasks mr-20"></i>
 					<span class="right-nav-text">Tasks</span>
 				</div>
 				<div class="pull-right"></div>
