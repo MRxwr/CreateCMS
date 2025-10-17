@@ -29,11 +29,13 @@ if ( isset($_GET["doing"]) ){
 	$employee = selectDB("employee","`id` LIKE '".$taskDetails[0]["to"]."'");
 	$user = selectDB("user","`id` LIKE '".$taskDetails[0]["by"]."'");
 	$project = selectDB("project","`id` LIKE '".$taskDetails[0]["projectId"]."'");
+    /*
 	$Msg = "Task Started:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nStart Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($employee[0]["phone"],$Msg);
 	$Msg = "Task Started:\n\nProject: ".$project[0]["title"]."\nTask Details: ".$taskDetails[0]["task"]."\nAssigned By: ".$user[0]["username"]."\nAssigned To: ".$employee[0]["name"]."\nStart Date: ".substr($date, 0, 10)."\nExpected Date: ".substr($taskDetails[0]["expected"], 0, 10);
 	whatsappUltraMsg($user[0]["phone"],$Msg);
-	header("Location: ?p=Tasks");die();
+    */
+	header("Location: index?p=Tasks");die();
 }
 if ( isset($_GET["done"]) ){
 	$table = "task";
