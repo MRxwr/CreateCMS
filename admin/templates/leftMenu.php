@@ -73,15 +73,6 @@ if ( $userType == 0 ){
 				<div class="clearfix"></div>
 			</a>
 			
-			<a class="<?php echo ($currentPage == 'UserRegistrations') ? 'active' : ''; ?>" href="?p=UserRegistrations" >
-				<div class="pull-left">
-					<i class="fa fa-user-circle-o mr-20"></i>
-					<span class="right-nav-text">User Registrations</span>
-				</div>
-				<div class="pull-right"></div>
-				<div class="clearfix"></div>
-			</a>
-			
 			<a class="<?php echo ($currentPage == 'Details') ? 'active' : ''; ?>" href="?p=Details&a=Logs" >
 				<div class="pull-left">
 					<i class="fa fa-clock-o mr-20"></i>
