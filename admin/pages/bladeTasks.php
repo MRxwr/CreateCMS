@@ -104,7 +104,7 @@ if ( isset($_GET["delete"]) ){
 
 <form action="" method="post" enctype="multipart/form-data">
 
-<div class="col-md-4">
+<div class="col-md-6">
 <div class="form-group">
 <label class="control-label mb-10" for="exampleInputuname_1">Project</label>
 <div class="input-group">
@@ -128,7 +128,7 @@ if ( isset($_GET["delete"]) ){
 </div>
 </div>	
 
-<div class="col-md-4">
+<div class="col-md-6">
 <div class="form-group">
 <label class="control-label mb-10" for="exampleInputuname_1">Details</label>
 <div class="input-group">
@@ -185,7 +185,6 @@ if ( isset($_GET["delete"]) ){
 <div class="col-md-12">
 <button type="submit" class="btn btn-success mr-10">Submit</button>
 <input type="hidden" name="date" value="<?php echo $date ?>">
-<input type="hidden" name="projectId" value="<?php echo $_GET["pid"] ?>">
 <input type="hidden" name="by" value="<?php echo $userId ?>">
 </div>
 
@@ -230,6 +229,7 @@ for($i = 0; $i < 3 ; $i++ ){
 <table id="<?php echo $myTable[$i] ?>" class="table table-hover display  pb-30" >
 <thead>
 <tr>
+<th>Project</th>
 <th>Initiated</th>
 <th>Expected</th>
 <?php if ( $status[$i] == 1 || $status[$i] == 2) { echo '<th>Doing</th>';} ?>
@@ -243,7 +243,7 @@ for($i = 0; $i < 3 ; $i++ ){
 </thead>
 <tbody>
 <?php
-$sql = "SELECT t.*, u.username, e.name
+$sql = "SELECT t.*, u.username, e.name, p.title as project
 		FROM `task` as t
 		JOIN `user` as u
 		ON u.id = t.by
@@ -258,6 +258,7 @@ $result = $dbconnect->query($sql);
 while ( $row = $result->fetch_assoc() ){
 ?>
 <tr>
+<td><?php echo $row["project"] ?></td>
 <td><?php echo substr($row["date"], 0, 10); ?></td>
 <td><?php echo substr($row["expected"], 0, 10); ?></td>
 <?php if ( $status[$i] == 1 || $status[$i] == 2 ) {echo '<td>'.substr($row["doing"], 0, 10).'</td>';} ?>
