@@ -63,7 +63,7 @@ if ( isset($_GET["return"]) ){
 <div class="input-group-addon"><i class="fa fa-user"></i></div>
 <select class="form-control" name="clientId" >
 	<?php
-	$sql = "SELECT *FROM `client` WHERE `status` LIKE '0' AND `type` IN ('2', '3') ORDER BY `title` ASC";
+	$sql = "SELECT * FROM `client` WHERE `status` LIKE '0' AND `type` IN ('2', '3') ORDER BY `name` ASC";
 	$result = $dbconnect->query($sql);
 	while ( $row = $result->fetch_assoc() ){
 	?>
